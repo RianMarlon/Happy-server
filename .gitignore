@@ -20,3 +20,6 @@ yarn-error.log*
 
 # file database
 **.sqlite
+
+# folder uploads
+/uploads

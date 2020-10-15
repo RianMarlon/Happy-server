@@ -30,5 +30,15 @@ export default {
     await orphanagesRepository.save(orphanage)
     
     return response.status(201).json(orphanage);
+  },
+
+  async index(request: Request, response: Response) {
+    const orphanagesRepository = getRepository(Orphanage);
+  
+    const orphanages = await orphanagesRepository.find();
+
+    return response.status(201).json({
+      orphanages
+    });
   }
 }

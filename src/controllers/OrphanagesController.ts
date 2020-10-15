@@ -45,11 +45,19 @@ export default {
   async show (request: Request, response: Response) {
     const { id } = request.params;
     const orphanagesRepository = getRepository(Orphanage);
-  
-    const orphanage = await orphanagesRepository.findOneOrFail(id);
 
-    return response.status(200).json({
-      orphanage
-    });
+    try {
+      const orphanage = await orphanagesRepository.findOneOrFail(id);
+
+      return response.status(200).json({
+        orphanage
+      });
+    }
+
+    catch(e) {
+      return response.status(200).json({
+        messageError: 'Nenhum orfanato encontrado!'
+      });
+    }
   }
 }

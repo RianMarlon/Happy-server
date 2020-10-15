@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { request, Request, Response } from 'express';
 import { getRepository } from 'typeorm';
 
 import Orphanage from '../models/Orphanage';
@@ -37,8 +37,19 @@ export default {
   
     const orphanages = await orphanagesRepository.find();
 
-    return response.status(201).json({
+    return response.status(200).json({
       orphanages
+    });
+  },
+
+  async show (request: Request, response: Response) {
+    const { id } = request.params;
+    const orphanagesRepository = getRepository(Orphanage);
+  
+    const orphanage = await orphanagesRepository.findOneOrFail(id);
+
+    return response.status(200).json({
+      orphanage
     });
   }
 }

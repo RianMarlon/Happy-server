@@ -39,16 +39,16 @@ export default {
     }
 
     const schema = Yup.object().shape({
-      name: Yup.string().required(),
-      latitude: Yup.number().required(),
-      longitude: Yup.number().required(),
-      about: Yup.string().required().max(500),
-      instructions: Yup.string().required(),
-      opening_hours: Yup.string().required(),
-      open_on_weekends: Yup.boolean().required(),
+      name: Yup.string().required('Nome não informado!'),
+      latitude: Yup.number().required('Localização não informada!'),
+      longitude: Yup.number().required('Localização não informada!'),
+      about: Yup.string().required('Informações sobre o orfanato não informadas!').max(500),
+      instructions: Yup.string().required('Instruções de visita não informadas!'),
+      opening_hours: Yup.string().required('Horários de visita não informados!'),
+      open_on_weekends: Yup.boolean().required('Não foi informado se funciona nos finais de semana!'),
       images: Yup.array(
         Yup.object().shape({
-          path: Yup.string().required()
+          path: Yup.string().required('Imagem não fornecida!')
         })
       )
     });
@@ -90,7 +90,7 @@ export default {
 
     catch(e) {
       return response.status(400).json({
-        messageError: 'No orphanages found!'
+        messagesError: ['Nenhum orfanato encontrado!']
       });
     }
   }

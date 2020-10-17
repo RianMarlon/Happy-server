@@ -42,7 +42,7 @@ export default {
       name: Yup.string().required('Nome não informado!'),
       latitude: Yup.number().required('Localização não informada!'),
       longitude: Yup.number().required('Localização não informada!'),
-      about: Yup.string().required('Informações sobre o orfanato não informadas!').max(500),
+      about: Yup.string().required('Informações sobre o orfanato não fornecidas!').max(500),
       instructions: Yup.string().required('Instruções de visita não informadas!'),
       opening_hours: Yup.string().required('Horários de visita não informados!'),
       open_on_weekends: Yup.boolean().required('Não foi informado se funciona nos finais de semana!'),
@@ -53,9 +53,7 @@ export default {
       )
     });
 
-    const finalData = schema.cast(data);
-
-    await schema.validate(finalData, {
+    await schema.validate(data, {
       abortEarly: false,
     });
   

@@ -23,3 +23,6 @@ yarn-error.log*
 
 # folder uploads
 /uploads
+
+# env files
+.env

@@ -38,8 +38,12 @@ export class createTableOrphanages1602727619066 implements MigrationInterface {
           type: 'text',
         },
         {
-          name: 'opening_hours',
-          type: 'varchar'
+          name: 'open_from',
+          type: 'integer'
+        },
+        {
+          name: 'open_until',
+          type: 'integer'
         },
         {
           name: 'open_on_weekends',

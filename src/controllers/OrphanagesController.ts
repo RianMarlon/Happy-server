@@ -4,6 +4,7 @@ import * as Yup from 'yup';
 
 import Orphanage from '../models/Orphanage';
 import orphanagesView from '../views/orphanagesView';
+import convertHourToMinute from '../utils/convertHourToMinute';
 
 export default {
   async create(request: Request, response: Response) {
@@ -13,7 +14,8 @@ export default {
       longitude,
       about,
       instructions,
-      opening_hours,
+      open_from,
+      open_until,
       open_on_weekends,
     } = request.body;
   
@@ -33,7 +35,8 @@ export default {
       longitude,
       about,
       instructions,
-      opening_hours,
+      open_from: convertHourToMinute(open_from),
+      open_until: convertHourToMinute(open_until),
       open_on_weekends: open_on_weekends === 'true',
       images,
     }
@@ -44,7 +47,8 @@ export default {
       longitude: Yup.number().required('Localização não informada!'),
       about: Yup.string().required('Informações sobre o orfanato não fornecidas!').max(500),
       instructions: Yup.string().required('Instruções de visita não informadas!'),
-      opening_hours: Yup.string().required('Horários de visita não informados!'),
+      open_from: Yup.number().required('Horário de abertura não informado!'),
+      open_until: Yup.number().required('Horário de fechamento não informado!'),
       open_on_weekends: Yup.boolean().required('Não foi informado se funciona nos finais de semana!'),
       images: Yup.array(
         Yup.object().shape({

@@ -1,5 +1,6 @@
 import Orphanage from '../models/Orphanage';
 import imageView from './imagesView';
+import convertMinutesToTime from '../utils/convertMinutesToTime';
 
 export default {
   render(orphanage: Orphanage) {
@@ -10,7 +11,8 @@ export default {
       longitude: orphanage.longitude,
       about: orphanage.about,
       instructions: orphanage.instructions,
-      opening_hours: orphanage.opening_hours,
+      open_from: convertMinutesToTime(orphanage.open_from),
+      open_until: convertMinutesToTime(orphanage.open_until),
       open_on_weekends: orphanage.open_on_weekends,
       images: imageView.renderMany(orphanage.images),
     };
@@ -25,7 +27,8 @@ export default {
         longitude: orphanage.longitude,
         about: orphanage.about,
         instructions: orphanage.instructions,
-        opening_hours: orphanage.opening_hours,
+        open_from: convertMinutesToTime(orphanage.open_from),
+        open_until: convertMinutesToTime(orphanage.open_until),
         open_on_weekends: orphanage.open_on_weekends,
         images: imageView.renderMany(orphanage.images),
       }

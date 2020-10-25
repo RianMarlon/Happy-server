@@ -57,6 +57,11 @@ export default {
       )
     });
 
+    if ((data.open_until - data.open_from) < 30
+      || (data.open_from - data.open_until) < 30) {
+      throw 'Necessário, no mínimo, disponibilidade de 30 minutos para visitas!';
+    }
+
     await schema.validate(data, {
       abortEarly: false,
     });

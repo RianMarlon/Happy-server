@@ -13,6 +13,7 @@ export default {
       latitude,
       longitude,
       about,
+      whatsapp,
       instructions,
       open_from,
       open_until,
@@ -34,6 +35,7 @@ export default {
       latitude,
       longitude,
       about,
+      whatsapp,
       instructions,
       open_from: convertHourToMinute(open_from),
       open_until: convertHourToMinute(open_until),
@@ -46,6 +48,7 @@ export default {
       latitude: Yup.number().required('Localização não informada!'),
       longitude: Yup.number().required('Localização não informada!'),
       about: Yup.string().required('Informações sobre o orfanato não fornecidas!').max(500),
+      whatsapp: Yup.number().required('Whatsapp não informado!'),
       instructions: Yup.string().required('Instruções de visita não informadas!'),
       open_from: Yup.number().required('Horário de abertura não informado!'),
       open_until: Yup.number().required('Horário de fechamento não informado!'),
@@ -56,16 +59,25 @@ export default {
         })
       )
     });
-
-    if ((data.open_until - data.open_from) < 30
-      || (data.open_from - data.open_until) < 30) {
-      throw 'Necessário, no mínimo, disponibilidade de 30 minutos para visitas!';
-    }
-
+    
     await schema.validate(data, {
       abortEarly: false,
     });
-  
+    
+    if (data.open_from > data.open_until) {
+      throw new Yup.ValidationError(
+        'Horário de abertura após o horário de fechamento!',
+        null, ''
+      );
+    }
+
+    else if (data.open_until - data.open_from < 30) {
+      throw new Yup.ValidationError(
+        'Necessário, no mínimo, disponibilidade de 30 minutos para visitas!',
+        null, ''
+      );
+    }
+    
     const orphanage = orphanagesRepository.create({ ...data });
   
     await orphanagesRepository.save(orphanage);

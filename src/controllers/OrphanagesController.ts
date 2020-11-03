@@ -4,6 +4,7 @@ import * as Yup from 'yup';
 
 import Orphanage from '../models/Orphanage';
 import orphanagesView from '../views/orphanagesView';
+
 import convertHourToMinute from '../utils/convertHourToMinute';
 
 export default {
@@ -26,7 +27,7 @@ export default {
 
     const images = requestImages.map((image) => {
       return {
-        path: image.filename
+        path: image.filename,
       }
     });
 
@@ -47,12 +48,12 @@ export default {
       name: Yup.string().required('Nome não informado!'),
       latitude: Yup.number().required('Localização não informada!'),
       longitude: Yup.number().required('Localização não informada!'),
-      about: Yup.string().required('Informações sobre o orfanato não fornecidas!').max(500),
+      about: Yup.string().required('Informações sobre o orfanato não fornecidas!').max(500, 'Informação sobre o orfanado deve conter, no máximo, 500 caracteres!'),
       whatsapp: Yup.number().required('Whatsapp não informado!'),
       instructions: Yup.string().required('Instruções de visita não informadas!'),
       open_from: Yup.number().required('Horário de abertura não informado!'),
       open_until: Yup.number().required('Horário de fechamento não informado!'),
-      open_on_weekends: Yup.boolean().required('Não foi informado se funciona nos finais de semana!'),
+      open_on_weekends: Yup.boolean().required('Não foi informado se recebe visitas nos finais de semana!'),
       images: Yup.array(
         Yup.object().shape({
           path: Yup.string().required('Imagem não fornecida!')
@@ -77,19 +78,34 @@ export default {
         null, ''
       );
     }
+
+    const orphanageByLocation = await orphanagesRepository
+      .createQueryBuilder('orphanage')
+      .where('orphanage.latitude = :latitude AND orphanage.longitude = :longitude')
+      .setParameters({
+        latitude, longitude,
+      })
+      .getOne();
+
+    if (orphanageByLocation) {
+      throw new Yup.ValidationError(
+        'Existe um orfanato nessa localização!',
+        null, ''
+      );
+    }
     
     const orphanage = orphanagesRepository.create({ ...data });
   
     await orphanagesRepository.save(orphanage);
-    
-    return response.status(201).json(orphanage);
+
+    return response.status(201).json();
   },
 
   async index(request: Request, response: Response) {
     const orphanagesRepository = getRepository(Orphanage);
   
     const orphanages = await orphanagesRepository.find({
-      relations: ['images']
+      relations: ['images'],
     });
 
     return response.status(200).json(orphanagesView.renderMany(orphanages));

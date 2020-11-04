@@ -18,7 +18,7 @@ export default {
       instructions,
       open_from,
       open_until,
-      open_on_weekends,
+      open_on_weekends
     } = request.body;
   
     const orphanagesRepository = getRepository(Orphanage);
@@ -27,7 +27,7 @@ export default {
 
     const images = requestImages.map((image) => {
       return {
-        path: image.filename,
+        path: image.filename
       }
     });
 
@@ -41,7 +41,7 @@ export default {
       open_from: convertHourToMinute(open_from),
       open_until: convertHourToMinute(open_until),
       open_on_weekends: open_on_weekends === 'true',
-      images,
+      images
     }
 
     const schema = Yup.object().shape({
@@ -62,7 +62,7 @@ export default {
     });
     
     await schema.validate(data, {
-      abortEarly: false,
+      abortEarly: false
     });
     
     if (data.open_from > data.open_until) {
@@ -83,7 +83,7 @@ export default {
       .createQueryBuilder('orphanage')
       .where('orphanage.latitude = :latitude AND orphanage.longitude = :longitude')
       .setParameters({
-        latitude, longitude,
+        latitude, longitude
       })
       .getOne();
 
@@ -105,7 +105,7 @@ export default {
     const orphanagesRepository = getRepository(Orphanage);
   
     const orphanages = await orphanagesRepository.find({
-      relations: ['images'],
+      relations: ['images']
     });
 
     return response.status(200).json(orphanagesView.renderMany(orphanages));

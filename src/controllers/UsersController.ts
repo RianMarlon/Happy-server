@@ -1,10 +1,13 @@
 import { Request, Response } from 'express';
 import { getRepository } from 'typeorm';
 import * as Yup from 'yup';
+import jwt from 'jsonwebtoken';
 
 import User from '../models/User';
 
 import encryptPassword from '../utils/encryptPassword';
+
+import emailService from '../modules/emailService';
 
 export default {
   async create (request: Request, response: Response) {
@@ -13,7 +16,7 @@ export default {
       last_name,
       email,
       password,
-      confirm_password,
+      confirm_password
     } = request.body;
 
     const usersRepository = getRepository(User);
@@ -23,7 +26,7 @@ export default {
       last_name,
       email,
       password,
-      confirm_password,
+      confirm_password
     }
 
     const schema = Yup.object().shape({
@@ -38,7 +41,7 @@ export default {
     });
 
     await schema.validate(data, {
-      abortEarly: false,
+      abortEarly: false
     });
 
     const userByEmail = await usersRepository
@@ -62,12 +65,34 @@ export default {
       first_name,
       last_name,
       email,
-      password: passwordEncrypted,
+      password: passwordEncrypted
     }
 
     const user = usersRepository.create({ ...newData });
 
     await usersRepository.save(user);
+
+    const payload = {
+      id: user.id
+    }
+
+    const token = jwt.sign({ ...payload }, process.env.AUTH_SECRET || '', {
+      expiresIn: '1d'
+    });
+
+    emailService.sendMail({
+      from: `Happy <${process.env.EMAIL_SERVICE_EMAIL}>`,
+      to: email,
+      subject: 'Confirme seu e-mail',
+      template: 'auth/confirmEmail',
+      context: {
+        token
+      }
+    } as any, (err) => {
+      return response.status(500).json({
+        messagesError: ['Não foi possível enviar o e-mail!']
+      });
+    });
 
     return response.status(201).json();
   },

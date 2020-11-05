@@ -78,4 +78,39 @@ export default {
       token,
     });
   },
+
+  async validateToken(request: Request, response: Response) {
+    const { token } = request.body;
+
+    const usersRepository = getRepository(User);
+
+    if (!token) {
+      throw new Yup.ValidationError(
+        'Token não informado!',
+        null, ''
+      );
+    }
+
+    const { id }: any = jwt.verify(token, process.env.AUTH_SECRET || '');
+
+    const userById = await usersRepository
+      .createQueryBuilder('user')
+      .where('user.id = :id AND user.verified_email = true')
+      .setParameters({
+        id,
+      })
+      .getOne();
+
+    if (!userById) {
+      return response.status(200).json({
+        isValidToken: false,
+      });
+    }
+
+    else {
+      return response.status(200).json({
+        isValidToken: true,
+      });
+    }
+  },
 }

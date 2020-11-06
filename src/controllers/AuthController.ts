@@ -7,6 +7,8 @@ import 'dotenv/config';
 
 import User from '../models/User';
 
+import emailService from '../modules/emailService';
+
 export default {
   async signin(request: Request, response: Response) {
     const { email, password, remember_me } = request.body;
@@ -112,5 +114,65 @@ export default {
         isValidToken: true,
       });
     }
+  },
+
+  async forgotPassword(request: Request, response: Response) {
+    const { email } = request.body;
+
+    const userRepository = getRepository(User);
+
+    const userByEmail = await userRepository
+      .createQueryBuilder('user')
+      .where('user.email = :email')
+      .setParameters({
+        email,
+      })
+      .getOne();
+
+    if (!userByEmail) {
+      throw new Yup.ValidationError(
+        'E-mail informado não está sendo usado por nenhum usuário!',
+        null, ''
+      );
+    }
+
+    const userHasVerifiedEmail = await userRepository
+      .createQueryBuilder('user')
+      .where('user.email = :email AND user.verified_email = true')
+      .setParameters({
+        email,
+      })
+      .getOne();
+
+    if (!userHasVerifiedEmail) {
+      throw new Yup.ValidationError(
+        'Usuário não confirmou o e-mail!',
+        null, ''
+      );
+    }
+
+    const payload = {
+      id: userByEmail.id,
+    }
+
+    const token = jwt.sign({ ...payload }, process.env.AUTH_SECRET || '', {
+      expiresIn: '30m',
+    });
+
+    emailService.sendMail({
+      from: `Happy <${process.env.EMAIL_SERVICE_EMAIL}>`,
+      to: email,
+      subject: 'Esqueceu sua senha?',
+      template: 'auth/forgotPassword',
+      context: {
+        token
+      }
+    } as any, (err) => {
+      return response.status(500).json({
+        messagesError: ['Não foi possível enviar o e-mail!']
+      });
+    });
+
+    return response.status(200).json();
   },
 }

@@ -18,6 +18,7 @@ routes.get('/orphanages/:id', OrphanagesController.show);
 routes.post('/orphanages', upload.array('images'), OrphanagesController.create);
 
 routes.post('/forgot-password', AuthController.forgotPassword);
+routes.put('/change-password', AuthController.changePassword);
 
 routes.post('/validate-token', AuthController.validateToken);
 

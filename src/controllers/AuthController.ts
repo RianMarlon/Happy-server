@@ -294,4 +294,49 @@ export default {
 
     return response.status(201).json();
   },
+
+  async confirmEmail(request: Request, response: Response) {
+    const { token } = request.body;
+
+    const usersRepository = getRepository(User);
+
+    const { id }: any = jwt.verify(token, process.env.AUTH_SECRET || '');
+
+    const userByToken = await usersRepository
+      .createQueryBuilder('user')
+      .where('user.id = :id')
+      .setParameters({
+        id,
+      })
+      .getOne();
+
+    if (!userByToken) {
+      throw new Yup.ValidationError(
+        'Usuário não encontrado!',
+        null, ''
+      );
+    }
+
+    const userByVerifiedEmail = await usersRepository
+      .createQueryBuilder('user')
+      .where('user.id = :id AND user.verified_email = true')
+      .setParameters({
+        id,
+      })
+      .getOne();
+
+    if (userByVerifiedEmail) {
+      throw new Yup.ValidationError(
+        'Usuário já confirmou o e-mail!',
+        null, ''
+      );
+    }
+
+    await usersRepository
+      .update(id, {
+        verified_email: true,
+      });
+
+    return response.status(200).json();
+  },
 }

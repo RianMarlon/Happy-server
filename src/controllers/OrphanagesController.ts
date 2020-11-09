@@ -38,8 +38,8 @@ export default {
       about,
       whatsapp,
       instructions,
-      open_from: convertHourToMinute(open_from),
-      open_until: convertHourToMinute(open_until),
+      open_from,
+      open_until,
       open_on_weekends: open_on_weekends === 'true',
       images
     }
@@ -49,30 +49,38 @@ export default {
       latitude: Yup.number().required('Localização não informada!'),
       longitude: Yup.number().required('Localização não informada!'),
       about: Yup.string().required('Informações sobre o orfanato não fornecidas!').max(500, 'Informação sobre o orfanado deve conter, no máximo, 500 caracteres!'),
-      whatsapp: Yup.number().required('Whatsapp não informado!'),
-      instructions: Yup.string().required('Instruções de visita não informadas!'),
-      open_from: Yup.number().required('Horário de abertura não informado!'),
-      open_until: Yup.number().required('Horário de fechamento não informado!'),
-      open_on_weekends: Yup.boolean().required('Não foi informado se recebe visitas nos finais de semana!'),
+      whatsapp: Yup.string().required('Número do Whatsapp não informado!'),
       images: Yup.array(
         Yup.object().shape({
           path: Yup.string().required('Imagem não fornecida!')
         })
-      )
+      ),
+      open_from: Yup.string().required('Horário de abertura não informado!')
+        .matches(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/, { message: 'Horário de abertura inválido!'}),
+      open_until: Yup.string().required('Horário de fechamento não informado!')
+        .matches(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/, { message: 'Horário de fechamento inválido!'}),
+      instructions: Yup.string().required('Instruções de visita não informadas!'),
+      open_on_weekends: Yup.boolean().required('Não foi informado se recebe visitas nos finais de semana!')
     });
     
     await schema.validate(data, {
       abortEarly: false
     });
+
+    const newData = {
+      ...data,
+      open_from: convertHourToMinute(data.open_from),
+      open_until: convertHourToMinute(data.open_until)
+    }
     
-    if (data.open_from > data.open_until) {
+    if (newData.open_from > newData.open_until) {
       throw new Yup.ValidationError(
         'Horário de abertura após o horário de fechamento!',
         null, ''
       );
     }
 
-    else if (data.open_until - data.open_from < 30) {
+    else if (newData.open_until - newData.open_from < 30) {
       throw new Yup.ValidationError(
         'Necessário, no mínimo, disponibilidade de 30 minutos para visitas!',
         null, ''
@@ -93,8 +101,8 @@ export default {
         null, ''
       );
     }
-    
-    const orphanage = orphanagesRepository.create({ ...data });
+
+    const orphanage = orphanagesRepository.create({ ...newData });
   
     await orphanagesRepository.save(orphanage);
 

@@ -35,7 +35,7 @@ export class createTableOrphanages1602727619066 implements MigrationInterface {
         },
         {
           name: 'whatsapp',
-          type: 'integer',
+          type: 'text',
         },
         {
           name: 'instructions',

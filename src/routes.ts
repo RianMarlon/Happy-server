@@ -21,6 +21,7 @@ routes.post('/forgot-password', AuthController.forgotPassword);
 routes.put('/change-password', AuthController.changePassword);
 
 routes.post('/resend-email-confirmation', AuthController.resendEmailConfirmation);
+routes.put('/confirm-email', AuthController.confirmEmail);
 
 routes.post('/validate-token', AuthController.validateToken);
 

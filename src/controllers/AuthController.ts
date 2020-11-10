@@ -62,6 +62,24 @@ export default {
       .getOne();
 
     if (!userHasVerifiedEmail) {
+      const payload = {
+        id: userByEmail.id
+      }
+  
+      const token = jwt.sign({ ...payload }, process.env.AUTH_SECRET || '', {
+        expiresIn: '1d'
+      });
+  
+      emailService.sendMail({
+        from: `Happy <${process.env.EMAIL_SERVICE_EMAIL}>`,
+        to: email,
+        subject: 'Confirme seu e-mail',
+        template: 'auth/confirmEmail',
+        context: {
+          token
+        }
+      } as any);
+
       throw new Yup.ValidationError(
         'Usuário não confirmou o e-mail!',
         null, ''
@@ -222,77 +240,6 @@ export default {
       });
 
     return response.status(204).json();
-  },
-
-  async resendEmailConfirmation (request: Request, response: Response) {
-    const {
-      email,
-    } = request.body;
-
-    const usersRepository = getRepository(User);
-
-    const schema = Yup.object().shape({
-      email: Yup.string().required('E-mail não informado!')
-        .email('E-mail inválido!'),
-    });
-
-    await schema.validate({ email }, {
-      abortEarly: false,
-    });
-
-    const userByEmail = await usersRepository
-      .createQueryBuilder('user')
-      .where('user.email = :email')
-      .setParameters({
-        email
-      })
-      .getOne();
-
-    if (!userByEmail) {
-      throw new Yup.ValidationError(
-        'E-mail informado não foi cadastrado!',
-        null, ''
-      );
-    }
-
-    const userByVerifiedEmail = await usersRepository
-      .createQueryBuilder('user')
-      .where('user.email = :email AND user.verified_email = true')
-      .setParameters({
-        email,
-      })
-      .getOne();
-
-    if (userByVerifiedEmail) {
-      throw new Yup.ValidationError(
-        'Usuário já confirmou o e-mail!',
-        null, ''
-      );
-    }
-
-    const payload = {
-      id: userByEmail.id
-    }
-
-    const token = jwt.sign({ ...payload }, process.env.AUTH_SECRET || '', {
-      expiresIn: '1d'
-    });
-
-    emailService.sendMail({
-      from: `Happy <${process.env.EMAIL_SERVICE_EMAIL}>`,
-      to: email,
-      subject: 'Confirme seu e-mail',
-      template: 'auth/confirmEmail',
-      context: {
-        token
-      }
-    } as any, (err) => {
-      return response.status(500).json({
-        messagesError: ['Não foi possível enviar o e-mail!']
-      });
-    });
-
-    return response.status(201).json();
   },
 
   async confirmEmail(request: Request, response: Response) {

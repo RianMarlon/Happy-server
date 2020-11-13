@@ -62,24 +62,6 @@ export default {
       .getOne();
 
     if (!userHasVerifiedEmail) {
-      const payload = {
-        id: userByEmail.id
-      }
-  
-      const token = jwt.sign({ ...payload }, process.env.AUTH_SECRET || '', {
-        expiresIn: '1d'
-      });
-  
-      emailService.sendMail({
-        from: `Happy <${process.env.EMAIL_SERVICE_EMAIL}>`,
-        to: email,
-        subject: 'Confirme seu e-mail',
-        template: 'auth/confirmEmail',
-        context: {
-          token
-        }
-      } as any);
-
       throw new Yup.ValidationError(
         'Usuário não confirmou o e-mail!',
         null, ''
@@ -247,7 +229,7 @@ export default {
 
     const usersRepository = getRepository(User);
 
-    const { id }: any = jwt.verify(token, process.env.AUTH_SECRET || '');
+    const { id }: any = jwt.verify(token, process.env.AUTH_SECRET_CONFIRM_EMAIL || '');
 
     const userByToken = await usersRepository
       .createQueryBuilder('user')

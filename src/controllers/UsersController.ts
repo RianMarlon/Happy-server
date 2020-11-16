@@ -35,13 +35,20 @@ export default {
       email: Yup.string().required('E-mail não informado!')
         .email('E-mail inválido!'),
       password: Yup.string().required('Senha não informada!')
-        .min(6, 'Senha deve conter, no mínimo, 6 caracteres'),
-      confirm_password: Yup.string().required('Senha de confirmação não informada!')
-        .equals([password], 'Senhas não conferem!')
+        .min(6, 'Senha deve conter, no mínimo, 6 caracteres')
     });
 
     await schema.validate(data, {
       abortEarly: false
+    });
+
+    const schemaConfirmPassword = Yup.object().shape({
+      confirm_password: Yup.string().required('Senha de confirmação não informada!')
+        .equals([password], 'Senhas não conferem!')
+    });
+
+    await schemaConfirmPassword.validate(data, {
+      abortEarly: false 
     });
 
     const userByEmail = await usersRepository

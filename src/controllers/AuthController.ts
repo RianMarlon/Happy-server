@@ -105,13 +105,13 @@ export default {
 
     if (!userById) {
       return response.status(200).json({
-        isValidToken: false,
+        is_valid_token: false,
       });
     }
 
     else {
       return response.status(200).json({
-        isValidToken: true,
+        is_valid_token: true,
       });
     }
   },

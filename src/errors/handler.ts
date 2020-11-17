@@ -1,4 +1,5 @@
 import { ErrorRequestHandler } from 'express';
+import { TokenExpiredError } from 'jsonwebtoken';
 import { ValidationError } from 'yup';
 
 const errorHandler: ErrorRequestHandler = (error, request, response, next) => {
@@ -11,6 +12,13 @@ const errorHandler: ErrorRequestHandler = (error, request, response, next) => {
 
     return response.status(400).json({
       messagesError,
+    });
+  }
+
+  else if (error instanceof TokenExpiredError) {
+    return response.status(401).json({
+      messagesError: ['Token expirado'],
+      is_valid_token: false,
     });
   }
 

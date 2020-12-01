@@ -59,7 +59,7 @@ export default {
         .matches(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/, { message: 'Horário de abertura inválido!'}),
       open_until: Yup.string().required('Horário de fechamento não informado!')
         .matches(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/, { message: 'Horário de fechamento inválido!'}),
-      instructions: Yup.string().required('Instruções de visita não informadas!'),
+      instructions: Yup.string().required('Instruções de visitas não informadas!').max(500, 'Instruções de visitas deve conter, no máximo, 500 caracteres!'),
       open_on_weekends: Yup.boolean().required('Não foi informado se recebe visitas nos finais de semana!')
     });
     

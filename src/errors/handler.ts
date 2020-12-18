@@ -2,7 +2,24 @@ import { ErrorRequestHandler } from 'express';
 import { TokenExpiredError } from 'jsonwebtoken';
 import { ValidationError } from 'yup';
 
+import removeImages from '../utils/removeImages';
+
 const errorHandler: ErrorRequestHandler = (error, request, response, next) => {
+  const requestImages = request.files as Express.Multer.File[];
+
+  if (requestImages) {
+    const images = requestImages.map((image) => {
+      return {
+        path: image.filename
+      }
+    });
+  
+    const filenames = images.map((image) => image.path);
+    const destination = requestImages[0].destination;
+
+    removeImages(destination, filenames);
+  }
+
   if (error instanceof ValidationError) {
     const messagesError: string[] = [];
 

@@ -33,6 +33,11 @@ export class createTableUsers1603584669272 implements MigrationInterface {
           name: 'verified_email',
           type: 'boolean',
           default: false,
+        },
+        {
+          name: 'admin',
+          type: 'boolean',
+          default: false,
         }
       ],
     }));

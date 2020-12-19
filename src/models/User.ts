@@ -19,4 +19,7 @@ export default class User {
 
   @Column({ default: 0 })
   verified_email: boolean;
+
+  @Column({ default: 0 })
+  admin: boolean;
 }

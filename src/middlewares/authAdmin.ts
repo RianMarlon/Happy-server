@@ -21,7 +21,7 @@ export default async function (request: Request, response: Response, next: NextF
 
   const userById = await usersRepository
     .createQueryBuilder('user')
-    .where('user.id = :id AND user.verified_email = true')
+    .where('user.id = :id AND user.verified_email = true AND user.admin = true')
     .setParameters({
       id: user.id
     })

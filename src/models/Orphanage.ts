@@ -38,4 +38,7 @@ export default class Orphanage {
   })
   @JoinColumn({ name: 'id_orphanage' })
   images: Image[];
+
+  @Column({ default: 0 })
+  confirmed: boolean;
 }

@@ -53,7 +53,12 @@ export class createTableOrphanages1602727619066 implements MigrationInterface {
           name: 'open_on_weekends',
           type: 'boolean',
           default: false,
-        }
+        },
+        {
+          name: 'confirmed',
+          type: 'boolean',
+          default: false,
+        },
       ],
     }));
   }

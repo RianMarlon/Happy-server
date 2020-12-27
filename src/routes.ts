@@ -13,12 +13,20 @@ const upload = multer(uploadConfig);
 routes.post('/signup', UsersController.create);
 routes.post('/signin', AuthController.signin);
 
-routes.get('/orphanages', OrphanagesController.index);
-routes.get('/orphanages/:id', OrphanagesController.show);
-routes.post('/orphanages', upload.array('images'), OrphanagesController.create);
-
 routes.post('/forgot-password', AuthController.forgotPassword);
 routes.put('/change-password', AuthController.changePassword);
+
+routes.get('/orphanages', OrphanagesController.index);
+routes.post('/orphanages', upload.array('images'), OrphanagesController.create);
+
+routes.get('/orphanages/:id', OrphanagesController.show);
+routes.put('/orphanages/:id', upload.array('images'), OrphanagesController.update);
+routes.delete('/orphanages/:id', OrphanagesController.destroy);
+
+routes.get('/orphanages-confirmed', OrphanagesController.indexConfirmed);
+routes.get('/orphanages-pending', OrphanagesController.indexPending);
+
+routes.put('/orphanages/:id/confirm', OrphanagesController.confirm);
 
 routes.put('/confirm-email', AuthController.confirmEmail);
 

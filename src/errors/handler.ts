@@ -24,7 +24,7 @@ const errorHandler: ErrorRequestHandler = (error, request, response, next) => {
 
   else {
     return response.status(400).json({
-      messagesError: ['Formato da imagem não é aceito!']
+      messagesError: ['Formato da imagem fornecida não é aceito!']
     });
   }
 

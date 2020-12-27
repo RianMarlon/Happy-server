@@ -40,7 +40,7 @@ export default {
     }
 
     else {
-      callback(new Error('Formato da imagem não é aceito!'));
+      callback(new Error('Formato da imagem fornecida não é aceito!'));
     }
   }
 }

@@ -177,7 +177,7 @@ export default {
     });
 
     return response.status(200).json({
-      orphanages: orphanagesView.renderMany(orphanages),
+      orphanages_by_page: orphanagesView.renderMany(orphanages),
       quantity_pending: quantityOrphanagesPending
     });
   },

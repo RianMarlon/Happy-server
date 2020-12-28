@@ -7,7 +7,13 @@ import removeImages from '../utils/removeImages';
 const errorHandler: ErrorRequestHandler = (error, request, response, next) => {
   const requestImages = request.files as Express.Multer.File[];
 
-  if (requestImages[0]) {   
+  if (requestImages) {
+    if (requestImages[0]) {
+      return response.status(400).json({
+        messagesError: ['Formato da imagem fornecida não é aceito!']
+      });
+    }
+
     const images = requestImages.map((image) => {
       return {
         path: image.filename
@@ -16,16 +22,9 @@ const errorHandler: ErrorRequestHandler = (error, request, response, next) => {
   
     const filenames = images.map((image) => image.path);
 
-    
     const destination = requestImages[0].destination;
 
     removeImages(destination, filenames);
-  }
-
-  else {
-    return response.status(400).json({
-      messagesError: ['Formato da imagem fornecida não é aceito!']
-    });
   }
 
   if (error instanceof ValidationError) {

@@ -5,6 +5,7 @@ import OrphanagesController from './controllers/OrphanagesController';
 import UsersController from './controllers/UsersController';
 import AuthController from './controllers/AuthController';
 import authenticate from './middlewares/auth';
+import authenticateAdmin from './middlewares/authAdmin';
 
 import uploadConfig from './config/upload';
 
@@ -23,12 +24,12 @@ routes.get('/orphanages', authenticate, OrphanagesController.index);
 routes.post('/orphanages', authenticate, upload.array('images'), OrphanagesController.create);
 routes.get('/orphanages/:id', authenticate, OrphanagesController.show);
 
-routes.put('/orphanages/:id', upload.array('images'), OrphanagesController.update);
-routes.delete('/orphanages/:id', OrphanagesController.destroy);
+routes.put('/orphanages/:id', authenticateAdmin, upload.array('images'), OrphanagesController.update);
+routes.delete('/orphanages/:id', authenticateAdmin, OrphanagesController.destroy);
 
-routes.get('/orphanages-confirmed', OrphanagesController.indexConfirmed);
-routes.get('/orphanages-pending', OrphanagesController.indexPending);
+routes.get('/orphanages-confirmed', authenticateAdmin, OrphanagesController.indexConfirmed);
+routes.get('/orphanages-pending', authenticateAdmin, OrphanagesController.indexPending);
 
-routes.put('/orphanages/:id/confirm', OrphanagesController.confirm);
+routes.put('/orphanages/:id/confirm', authenticateAdmin, OrphanagesController.confirm);
 
 export default routes;

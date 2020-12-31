@@ -60,6 +60,12 @@ export class createTableOrphanages1602727619066 implements MigrationInterface {
           default: false,
         },
       ],
+      uniques: [
+        {
+          name: 'uq_orphanages_latitude_longitude',
+          columnNames: ['latitude', 'longitude']
+        }
+      ],
     }));
   }
 

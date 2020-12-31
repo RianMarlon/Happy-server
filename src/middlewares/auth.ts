@@ -17,7 +17,7 @@ export default async function (request: Request, response: Response, next: NextF
   const usersRepository = getRepository(User);
 
   const [scheme, token] = authHeader.split(' ');
-  const user: any = await jwt.verify(token, process.env.AUTH_SECRET || '');
+  const user: any = await jwt.verify(token, process.env.AUTH_SECRET as string);
 
   const userById = await usersRepository
     .createQueryBuilder('user')

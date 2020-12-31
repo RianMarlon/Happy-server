@@ -83,7 +83,7 @@ export default {
       id: user.id
     }
 
-    const token = jwt.sign({ ...payload }, process.env.AUTH_SECRET_CONFIRM_EMAIL || '');
+    const token = jwt.sign({ ...payload }, process.env.AUTH_SECRET_CONFIRM_EMAIL as string);
 
     emailService.sendMail({
       from: `Happy <${process.env.EMAIL_SERVICE_EMAIL}>`,

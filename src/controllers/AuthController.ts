@@ -73,7 +73,7 @@ export default {
       admin: userByEmail.admin
     }
 
-    const token = jwt.sign({ ...payload }, process.env.AUTH_SECRET || '', {
+    const token = jwt.sign({ ...payload }, process.env.AUTH_SECRET as string, {
       expiresIn: remember_me ? '14d' : '1d',
     });
 
@@ -94,7 +94,7 @@ export default {
       );
     }
 
-    const { id }: any = jwt.verify(token, process.env.AUTH_SECRET || '');
+    const { id }: any = jwt.verify(token, process.env.AUTH_SECRET as string);
 
     const userById = await usersRepository
       .createQueryBuilder('user')
@@ -173,7 +173,7 @@ export default {
       id: userByEmail.id,
     }
 
-    const token = jwt.sign({ ...payload }, process.env.AUTH_SECRET || '', {
+    const token = jwt.sign({ ...payload }, process.env.AUTH_SECRET as string, {
       expiresIn: '30m',
     });
 
@@ -217,7 +217,7 @@ export default {
       abortEarly: false,
     });
 
-    const { id }: any = jwt.verify(token, process.env.AUTH_SECRET || '');
+    const { id }: any = jwt.verify(token, process.env.AUTH_SECRET as string);
 
     const userById = await usersRepository
       .createQueryBuilder('user')
@@ -247,7 +247,7 @@ export default {
 
     const usersRepository = getRepository(User);
 
-    const { id }: any = jwt.verify(token, process.env.AUTH_SECRET_CONFIRM_EMAIL || '');
+    const { id }: any = jwt.verify(token, process.env.AUTH_SECRET_CONFIRM_EMAIL as string);
 
     const userByToken = await usersRepository
       .createQueryBuilder('user')

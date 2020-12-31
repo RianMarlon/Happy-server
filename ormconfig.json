@@ -4,6 +4,12 @@
   "migrations": [
     "./src/database/migrations/*.ts"
   ],
+  "seeds": [
+    "./src/database/seeds/*.ts"
+  ],
+  "factories": [
+    "./src/database/factories/*.ts"
+  ],
   "entities": [
     "./src/models/*.ts"
   ],

@@ -22,7 +22,8 @@ yarn-error.log*
 **.sqlite
 
 # folder uploads
-/uploads
+/uploads/*
+!uploads/.gitkeep
 
 # env files
 .env

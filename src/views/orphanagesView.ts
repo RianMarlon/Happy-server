@@ -7,8 +7,8 @@ export default {
     return {
       id: orphanage.id,
       name: orphanage.name,
-      latitude: orphanage.latitude,
-      longitude: orphanage.longitude,
+      latitude: Number(orphanage.latitude),
+      longitude: Number(orphanage.longitude),
       about: orphanage.about,
       whatsapp: orphanage.whatsapp,
       instructions: orphanage.instructions,
@@ -20,20 +20,6 @@ export default {
   },
 
   renderMany(orphanages: Orphanage[]) {
-    return orphanages.map((orphanage: Orphanage) => {
-      return {
-        id: orphanage.id,
-        name: orphanage.name,
-        latitude: orphanage.latitude,
-        longitude: orphanage.longitude,
-        about: orphanage.about,
-        whatsapp: orphanage.whatsapp,
-        instructions: orphanage.instructions,
-        open_from: convertMinutesToTime(orphanage.open_from),
-        open_until: convertMinutesToTime(orphanage.open_until),
-        open_on_weekends: orphanage.open_on_weekends,
-        images: imageView.renderMany(orphanage.images),
-      }
-    });
+    return orphanages.map((orphanage: Orphanage) => this.render(orphanage));
   }
 }

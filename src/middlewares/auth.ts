@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { getRepository } from 'typeorm';
-import 'dotenv/config';
 
 import User from '../models/User';
 

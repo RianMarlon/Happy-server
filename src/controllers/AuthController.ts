@@ -3,7 +3,6 @@ import { getRepository } from 'typeorm';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import * as Yup from 'yup';
-import 'dotenv/config';
 
 import User from '../models/User';
 import emailService from '../modules/emailService';

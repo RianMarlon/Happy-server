@@ -2,6 +2,7 @@ import express from 'express';
 import path from 'path';
 import 'express-async-errors';
 import cors from 'cors';
+import 'dotenv/config';
 
 import './database/connection';
 import routes from './routes';

@@ -177,7 +177,7 @@ export default {
     });
 
     emailService.sendMail({
-      from: `Happy <${process.env.EMAIL_SERVICE_EMAIL}>`,
+      from: `Happy <${process.env.MAIL_SERVICE_EMAIL}>`,
       to: email,
       subject: 'Esqueceu sua senha?',
       template: 'auth/forgotPassword',

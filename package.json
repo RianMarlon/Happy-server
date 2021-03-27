@@ -8,8 +8,7 @@
     "dev": "tsnd --transpile-only --ignore-watch node_modules src/server.ts",
     "build": "tsc",
     "typeorm": "tsnd ./node_modules/typeorm/cli.js",
-    "seed:config": "tsnd ./node_modules/typeorm-seeding/dist/cli.js config",
-    "seed:run": "tsnd ./node_modules/typeorm-seeding/dist/cli.js seed"
+    "seeding": "tsnd ./node_modules/typeorm-seeding/dist/cli.js"
   },
   "dependencies": {
     "bcrypt": "^5.0.0",

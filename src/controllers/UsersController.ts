@@ -91,6 +91,7 @@ export default {
       subject: 'Confirme seu e-mail',
       template: 'auth/confirmEmail',
       context: {
+        mailUrl: process.env.MAIL_URL,
         token
       }
     } as any, (err) => {

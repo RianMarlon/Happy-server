@@ -5,11 +5,11 @@ import 'dotenv/config';
 const hbs = require('nodemailer-express-handlebars');
 
 const transport = nodemailer.createTransport({
-  host: process.env.EMAIL_SERVICE_HOST,
-  port: Number(process.env.EMAIL_SERVICE_PORT),
+  host: process.env.MAIL_SERVICE_HOST,
+  port: Number(process.env.MAIL_SERVICE_PORT),
   auth: {
-    user: process.env.EMAIL_SERVICE_USER,
-    pass: process.env.EMAIL_SERVICE_PASS
+    user: process.env.MAIL_SERVICE_USER,
+    pass: process.env.MAIL_SERVICE_PASS
   }
 });
 

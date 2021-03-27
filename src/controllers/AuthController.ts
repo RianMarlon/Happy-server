@@ -182,6 +182,7 @@ export default {
       subject: 'Esqueceu sua senha?',
       template: 'auth/forgotPassword',
       context: {
+        mailUrl: process.env.MAIL_URL,
         token
       }
     } as any, (err) => {

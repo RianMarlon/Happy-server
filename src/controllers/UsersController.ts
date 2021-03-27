@@ -86,7 +86,7 @@ export default {
     const token = jwt.sign({ ...payload }, process.env.AUTH_SECRET_CONFIRM_EMAIL as string);
 
     emailService.sendMail({
-      from: `Happy <${process.env.EMAIL_SERVICE_EMAIL}>`,
+      from: `Happy <${process.env.MAIL_SERVICE_EMAIL}>`,
       to: email,
       subject: 'Confirme seu e-mail',
       template: 'auth/confirmEmail',

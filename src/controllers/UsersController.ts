@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { getRepository } from 'typeorm';
+import { resolve } from 'path';
 import * as Yup from 'yup';
 import jwt from 'jsonwebtoken';
 
@@ -7,7 +8,7 @@ import User from '../models/User';
 
 import encryptPassword from '../utils/encryptPassword';
 
-import emailService from '../modules/emailService';
+import SendMailService from '../services/SendMailService';
 
 export default {
   async create (request: Request, response: Response) {
@@ -85,21 +86,28 @@ export default {
 
     const token = jwt.sign({ ...payload }, process.env.AUTH_SECRET_CONFIRM_EMAIL as string);
 
-    emailService.sendMail({
-      from: `Happy <${process.env.MAIL_SERVICE_EMAIL}>`,
-      to: email,
-      subject: 'Confirme seu e-mail',
-      template: 'auth/confirmEmail',
-      context: {
-        mailUrl: process.env.MAIL_URL,
-        token
-      }
-    } as any, (err) => {
-      return response.status(500).json({
-        messagesError: ['Não foi possível enviar o e-mail!']
-      });
-    });
+    const mailPath = resolve(__dirname, '..', 'templates', 'emails', 'auth', 'confirmEmail.hbs');
 
-    return response.status(201).json();
+    const to = email;
+    const from = `Happy <${process.env.MAIL_SERVICE_EMAIL}>`;
+
+    const variables = {
+      mailUrl: process.env.MAIL_URL,
+      token
+    }
+
+    try {
+      await SendMailService.execute(to, from, 'Confirme seu e-mail', variables, mailPath);
+    } catch(err) {
+      if (err) {
+        return response.status(500).json({
+          messagesError: ['Não foi possível enviar o e-mail!']
+        });
+      }
+
+      return response.status(200).json();
+    }
+
+    return response.status(200).json();
   },
 }

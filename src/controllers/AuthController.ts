@@ -2,10 +2,13 @@ import { Request, Response } from 'express';
 import { getRepository } from 'typeorm';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { resolve } from 'path';
 import * as Yup from 'yup';
 
 import User from '../models/User';
-import emailService from '../modules/emailService';
+
+import SendMailService from '../services/SendMailService';
+
 import encryptPassword from '../utils/encryptPassword';
 
 export default {
@@ -176,20 +179,27 @@ export default {
       expiresIn: '30m',
     });
 
-    emailService.sendMail({
-      from: `Happy <${process.env.MAIL_SERVICE_EMAIL}>`,
-      to: email,
-      subject: 'Esqueceu sua senha?',
-      template: 'auth/forgotPassword',
-      context: {
-        mailUrl: process.env.MAIL_URL,
-        token
+    const mailPath = resolve(__dirname, '..', 'templates', 'emails', 'auth', 'forgotPassword.hbs');
+
+    const to = email;
+    const from = `Happy <${process.env.MAIL_SERVICE_EMAIL}>`;
+
+    const variables = {
+      mailUrl: process.env.MAIL_URL,
+      token
+    }
+
+    try {
+      await SendMailService.execute(to, from, 'Esqueceu sua senha?', variables, mailPath);
+    } catch(err) {
+      if (err) {
+        return response.status(500).json({
+          messagesError: ['Não foi possível enviar o e-mail!']
+        });
       }
-    } as any, (err) => {
-      return response.status(500).json({
-        messagesError: ['Não foi possível enviar o e-mail!']
-      });
-    });
+
+      return response.status(200).json();
+    }
 
     return response.status(200).json();
   },

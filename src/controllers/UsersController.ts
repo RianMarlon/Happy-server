@@ -86,7 +86,7 @@ export default {
 
     const token = jwt.sign({ ...payload }, process.env.AUTH_SECRET_CONFIRM_EMAIL as string);
 
-    const mailPath = resolve(__dirname, '..', 'templates', 'emails', 'auth', 'confirmEmail.hbs');
+    const mailPath = resolve('./src/templates/emails/auth/confirmEmail.hbs');
 
     const to = email;
     const from = `Happy <${process.env.MAIL_SERVICE_EMAIL}>`;

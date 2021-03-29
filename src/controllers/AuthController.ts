@@ -179,7 +179,7 @@ export default {
       expiresIn: '30m',
     });
 
-    const mailPath = resolve(__dirname, '..', 'templates', 'emails', 'auth', 'forgotPassword.hbs');
+    const mailPath = resolve('./src/templates/emails/auth/forgotPassword.hbs');
 
     const to = email;
     const from = `Happy <${process.env.MAIL_SERVICE_EMAIL}>`;

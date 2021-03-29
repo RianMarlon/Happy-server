@@ -10,8 +10,15 @@ class SendMailService {
         host: process.env.MAIL_SERVICE_HOST,
         port: Number(process.env.MAIL_SERVICE_PORT),
         auth: {
+          type: process.env.MAIL_SERVICE_TYPE as any,
           user: process.env.MAIL_SERVICE_USER,
-          pass: process.env.MAIL_SERVICE_PASS
+          clientId: process.env.MAIL_SERVICE_CLIENT_ID,
+          clientSecret: process.env.MAIL_SERVICE_CLIENT_SECRET,
+          refreshToken: process.env.MAIL_SERVICE_REFRESH_TOKEN,
+          accessToken: process.env.MAIL_SERVICE_ACCESS_TOKEN,
+        },
+        tls: {
+          rejectUnauthorized: false
         }
       });
 

@@ -13,6 +13,9 @@
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint --fix --ext .ts ."
   },
+  "engines": {
+    "node": "16.x.x"
+  },
   "dependencies": {
     "bcrypt": "^5.0.0",
     "cors": "^2.8.5",

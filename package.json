@@ -9,7 +9,9 @@
     "build": "tsc",
     "typeorm": "node ./node_modules/typeorm/cli.js",
     "seed:config": "node ./node_modules/typeorm-seeding/dist/cli.js config",
-    "seed:run": "node ./node_modules/typeorm-seeding/dist/cli.js seed"
+    "seed:run": "node ./node_modules/typeorm-seeding/dist/cli.js seed",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint --fix --ext .ts ."
   },
   "dependencies": {
     "bcrypt": "^5.0.0",
@@ -35,7 +37,13 @@
     "@types/multer": "^1.4.4",
     "@types/nodemailer": "^6.4.0",
     "@types/yup": "^0.29.8",
+    "@typescript-eslint/eslint-plugin": "^6.4.1",
+    "@typescript-eslint/parser": "^6.4.1",
+    "eslint": "~8.17.0",
+    "eslint-config": "^0.3.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "prettier": "^3.0.2",
     "ts-node-dev": "^1.0.0-pre.65",
-    "typescript": "^4.0.3"
+    "typescript": "^4.0.0"
   }
 }

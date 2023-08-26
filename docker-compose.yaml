@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  server:
+    build: .
+    container_name: happy-server
+    volumes:
+      - ./:/usr/home/app
+    ports:
+      - 3000:3000
+    depends_on:
+      - database
+    command: bash -c "yarn typeorm migration:run && yarn dev"
+  
+  database:
+    image: bitnami/postgresql:latest
+    container_name: happy-database
+    ports:
+      - 5342:5342
+    volumes:
+      - postgres_data:/bitnami/postgresql
+    environment:
+      - POSTGRES_PASSWORD=1234
+
+volumes:
+  postgres_data:
+    driver: local

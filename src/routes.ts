@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, Request, Response } from 'express';
 import multer from 'multer';
 
 import OrphanagesController from './controllers/OrphanagesController';
@@ -57,5 +57,9 @@ routes.put(
   authenticateAdmin,
   OrphanagesController.confirm
 );
+
+routes.get('/status', (request: Request, response: Response) => {
+  return response.status(200).json();
+});
 
 export default routes;

@@ -3,12 +3,12 @@ import path from 'path';
 import fs from 'fs';
 import crypto from 'crypto';
 
-const pathFiles = path.join(__dirname,  '..', '..', 'uploads');
+const pathFiles = path.join(__dirname, '..', '..', 'uploads');
 
 export default {
   storage: multer.diskStorage({
     destination: (request, file, callback) => {
-      if (!fs.existsSync(pathFiles)){
+      if (!fs.existsSync(pathFiles)) {
         fs.mkdirSync(pathFiles, { recursive: true });
       }
 
@@ -18,11 +18,13 @@ export default {
       crypto.randomBytes(16, (err: any, hash) => {
         const format = file.mimetype.split('/')[1];
 
-        const fileName = `${Date.now().toString()}-${hash.toString('hex')}.${format}`;
+        const fileName = `${Date.now().toString()}-${hash.toString(
+          'hex'
+        )}.${format}`;
 
         callback(null, fileName);
       });
-    }
+    },
   }),
   limits: {
     fileSize: 5 * 1024 * 1024,
@@ -32,15 +34,13 @@ export default {
       'image/jpeg',
       'image/pjpeg',
       'image/jpg',
-      'image/png'
+      'image/png',
     ];
 
     if (allowedMimes.includes(file.mimetype)) {
       callback(null, true);
-    }
-
-    else {
+    } else {
       callback(new Error('Formato da imagem fornecida não é aceito!'));
     }
-  }
-}
+  },
+};

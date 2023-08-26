@@ -18,14 +18,16 @@ export default {
     const usersRepository = getRepository(User);
 
     const schema = Yup.object().shape({
-      email: Yup.string().required('E-mail não informado!').email('E-mail inválido!'),
+      email: Yup.string()
+        .required('E-mail não informado!')
+        .email('E-mail inválido!'),
       password: Yup.string().required('Senha não informada!'),
     });
 
     const data = {
       email,
       password,
-    }
+    };
 
     await schema.validate(data, {
       abortEarly: false,
@@ -40,19 +42,13 @@ export default {
       .getOne();
 
     if (!userByEmail) {
-      throw new Yup.ValidationError(
-        'E-mail não cadastrado!',
-        null, ''
-      );
+      throw new Yup.ValidationError('E-mail não cadastrado!', null, '');
     }
 
     const isMatch = bcrypt.compareSync(password, userByEmail.password);
 
     if (!isMatch) {
-      throw new Yup.ValidationError(
-        'Senha inválida!',
-        null, ''
-      );
+      throw new Yup.ValidationError('Senha inválida!', null, '');
     }
 
     const userHasVerifiedEmail = await usersRepository
@@ -66,14 +62,15 @@ export default {
     if (!userHasVerifiedEmail) {
       throw new Yup.ValidationError(
         'Usuário não confirmou o e-mail!',
-        null, ''
+        null,
+        ''
       );
     }
 
     const payload = {
       id: userByEmail.id,
-      admin: userByEmail.admin
-    }
+      admin: userByEmail.admin,
+    };
 
     const token = jwt.sign({ ...payload }, process.env.AUTH_SECRET as string, {
       expiresIn: remember_me ? '14d' : '1d',
@@ -90,10 +87,7 @@ export default {
     const usersRepository = getRepository(User);
 
     if (!token) {
-      throw new Yup.ValidationError(
-        'Token não informado!',
-        null, ''
-      );
+      throw new Yup.ValidationError('Token não informado!', null, '');
     }
 
     const { id }: any = jwt.verify(token, process.env.AUTH_SECRET as string);
@@ -108,7 +102,9 @@ export default {
 
     const userAdmin = await usersRepository
       .createQueryBuilder('user')
-      .where('user.id = :id AND user.verified_email = true AND user.admin = true')
+      .where(
+        'user.id = :id AND user.verified_email = true AND user.admin = true'
+      )
       .setParameters({
         id,
       })
@@ -117,21 +113,19 @@ export default {
     if (!userById) {
       return response.status(200).json({
         is_valid_token: false,
-        is_admin: false
+        is_admin: false,
       });
-    }
-
-    else {
+    } else {
       if (userAdmin) {
         return response.status(200).json({
           is_valid_token: true,
-          is_admin: true
-        });  
+          is_admin: true,
+        });
       }
 
       return response.status(200).json({
         is_valid_token: true,
-        is_admin: false
+        is_admin: false,
       });
     }
   },
@@ -152,7 +146,8 @@ export default {
     if (!userByEmail) {
       throw new Yup.ValidationError(
         'E-mail informado não está sendo usado por nenhum usuário!',
-        null, ''
+        null,
+        ''
       );
     }
 
@@ -167,13 +162,14 @@ export default {
     if (!userHasVerifiedEmail) {
       throw new Yup.ValidationError(
         'Usuário não confirmou o e-mail!',
-        null, ''
+        null,
+        ''
       );
     }
 
     const payload = {
       id: userByEmail.id,
-    }
+    };
 
     const token = jwt.sign({ ...payload }, process.env.AUTH_SECRET as string, {
       expiresIn: '30m',
@@ -186,15 +182,21 @@ export default {
 
     const variables = {
       mailUrl: process.env.MAIL_URL,
-      token
-    }
+      token,
+    };
 
     try {
-      await SendMailService.execute(to, from, 'Esqueceu sua senha?', variables, mailPath);
-    } catch(err) {
+      await SendMailService.execute(
+        to,
+        from,
+        'Esqueceu sua senha?',
+        variables,
+        mailPath
+      );
+    } catch (err) {
       if (err) {
         return response.status(500).json({
-          messagesError: ['Não foi possível enviar o e-mail!']
+          messagesError: ['Não foi possível enviar o e-mail!'],
         });
       }
 
@@ -205,11 +207,7 @@ export default {
   },
 
   async changePassword(request: Request, response: Response) {
-    const {
-      token,
-      password,
-      confirm_password,
-    } = request.body;
+    const { token, password, confirm_password } = request.body;
 
     const usersRepository = getRepository(User);
 
@@ -219,8 +217,12 @@ export default {
     };
 
     const schema = Yup.object().shape({
-      password: Yup.string().required('Senha não informada!').min(6, 'Senha deve conter, no mínimo, 6 caracteres'),
-      confirm_password: Yup.string().required('Senha de confirmação não informada!').equals([password], 'Senhas não conferem')
+      password: Yup.string()
+        .required('Senha não informada!')
+        .min(6, 'Senha deve conter, no mínimo, 6 caracteres'),
+      confirm_password: Yup.string()
+        .required('Senha de confirmação não informada!')
+        .equals([password], 'Senhas não conferem'),
     });
 
     await schema.validate(data, {
@@ -238,16 +240,12 @@ export default {
       .getOne();
 
     if (!userById) {
-      throw new Yup.ValidationError(
-        'Usuário não encontrado!',
-        null, ''
-      );
+      throw new Yup.ValidationError('Usuário não encontrado!', null, '');
     }
 
-    await usersRepository
-      .update(id, {
-        password: encryptPassword(password),
-      });
+    await usersRepository.update(id, {
+      password: encryptPassword(password),
+    });
 
     return response.status(204).json();
   },
@@ -257,7 +255,10 @@ export default {
 
     const usersRepository = getRepository(User);
 
-    const { id }: any = jwt.verify(token, process.env.AUTH_SECRET_CONFIRM_EMAIL as string);
+    const { id }: any = jwt.verify(
+      token,
+      process.env.AUTH_SECRET_CONFIRM_EMAIL as string
+    );
 
     const userByToken = await usersRepository
       .createQueryBuilder('user')
@@ -268,10 +269,7 @@ export default {
       .getOne();
 
     if (!userByToken) {
-      throw new Yup.ValidationError(
-        'Usuário não encontrado!',
-        null, ''
-      );
+      throw new Yup.ValidationError('Usuário não encontrado!', null, '');
     }
 
     const userByVerifiedEmail = await usersRepository
@@ -283,17 +281,13 @@ export default {
       .getOne();
 
     if (userByVerifiedEmail) {
-      throw new Yup.ValidationError(
-        'Usuário já confirmou o e-mail!',
-        null, ''
-      );
+      throw new Yup.ValidationError('Usuário já confirmou o e-mail!', null, '');
     }
 
-    await usersRepository
-      .update(id, {
-        verified_email: true,
-      });
+    await usersRepository.update(id, {
+      verified_email: true,
+    });
 
     return response.status(204).json();
   },
-}
+};

@@ -1,9 +1,9 @@
-import { Connection } from "typeorm";
-import { Factory, Seeder } from "typeorm-seeding";
+import { Connection } from 'typeorm';
+import { Factory, Seeder } from 'typeorm-seeding';
 
-import User from "../../models/User";
+import User from '../../models/User';
 
-import encryptPassword from "../../utils/encryptPassword";
+import encryptPassword from '../../utils/encryptPassword';
 
 export default class CreateUsers implements Seeder {
   public async run(factory: Factory, connection: Connection): Promise<any> {
@@ -17,8 +17,8 @@ export default class CreateUsers implements Seeder {
         email: process.env.USER_ADMIN_EMAIL,
         password: encryptPassword(process.env.USER_ADMIN_PASSWORD as string),
         verified_email: true,
-        admin: true
+        admin: true,
       })
-      .execute()
+      .execute();
   }
 }

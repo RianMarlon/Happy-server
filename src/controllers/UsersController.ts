@@ -11,14 +11,9 @@ import encryptPassword from '../utils/encryptPassword';
 import SendMailService from '../services/SendMailService';
 
 export default {
-  async create (request: Request, response: Response) {
-    const {
-      first_name,
-      last_name,
-      email,
-      password,
-      confirm_password
-    } = request.body;
+  async create(request: Request, response: Response) {
+    const { first_name, last_name, email, password, confirm_password } =
+      request.body;
 
     const usersRepository = getRepository(User);
 
@@ -27,43 +22,47 @@ export default {
       last_name,
       email,
       password,
-      confirm_password
-    }
+      confirm_password,
+    };
 
     const schema = Yup.object().shape({
       first_name: Yup.string().required('Nome não informado!'),
       last_name: Yup.string().required('Sobrenome não informado!'),
-      email: Yup.string().required('E-mail não informado!')
+      email: Yup.string()
+        .required('E-mail não informado!')
         .email('E-mail inválido!'),
-      password: Yup.string().required('Senha não informada!')
-        .min(6, 'Senha deve conter, no mínimo, 6 caracteres')
+      password: Yup.string()
+        .required('Senha não informada!')
+        .min(6, 'Senha deve conter, no mínimo, 6 caracteres'),
     });
 
     await schema.validate(data, {
-      abortEarly: false
+      abortEarly: false,
     });
 
     const schemaConfirmPassword = Yup.object().shape({
-      confirm_password: Yup.string().required('Senha de confirmação não informada!')
-        .equals([password], 'Senhas não conferem!')
+      confirm_password: Yup.string()
+        .required('Senha de confirmação não informada!')
+        .equals([password], 'Senhas não conferem!'),
     });
 
     await schemaConfirmPassword.validate(data, {
-      abortEarly: false 
+      abortEarly: false,
     });
 
     const userByEmail = await usersRepository
       .createQueryBuilder('user')
       .where('user.email = :email')
       .setParameters({
-        email
+        email,
       })
       .getOne();
 
     if (userByEmail) {
       throw new Yup.ValidationError(
         'E-mail informado já foi cadastrado!',
-        null, ''
+        null,
+        ''
       );
     }
 
@@ -73,18 +72,21 @@ export default {
       first_name,
       last_name,
       email,
-      password: passwordEncrypted
-    }
+      password: passwordEncrypted,
+    };
 
     const user = usersRepository.create({ ...newData });
 
     await usersRepository.save(user);
 
     const payload = {
-      id: user.id
-    }
+      id: user.id,
+    };
 
-    const token = jwt.sign({ ...payload }, process.env.AUTH_SECRET_CONFIRM_EMAIL as string);
+    const token = jwt.sign(
+      { ...payload },
+      process.env.AUTH_SECRET_CONFIRM_EMAIL as string
+    );
 
     const mailPath = resolve('./src/templates/emails/auth/confirmEmail.hbs');
 
@@ -93,15 +95,21 @@ export default {
 
     const variables = {
       mailUrl: process.env.MAIL_URL,
-      token
-    }
+      token,
+    };
 
     try {
-      await SendMailService.execute(to, from, 'Confirme seu e-mail', variables, mailPath);
-    } catch(err) {
+      await SendMailService.execute(
+        to,
+        from,
+        'Confirme seu e-mail',
+        variables,
+        mailPath
+      );
+    } catch (err) {
       if (err) {
         return response.status(500).json({
-          messagesError: ['Não foi possível enviar o e-mail!']
+          messagesError: ['Não foi possível enviar o e-mail!'],
         });
       }
 
@@ -110,4 +118,4 @@ export default {
 
     return response.status(200).json();
   },
-}
+};

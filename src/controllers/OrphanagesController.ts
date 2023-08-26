@@ -20,17 +20,17 @@ export default {
       instructions,
       open_from,
       open_until,
-      open_on_weekends
+      open_on_weekends,
     } = request.body;
-    
+
     const orphanagesRepository = getRepository(Orphanage);
 
     const requestImages = request.files as Express.Multer.File[];
 
     const images = requestImages.map((image) => {
       return {
-        path: image.filename
-      }
+        path: image.filename,
+      };
     });
 
     const data = {
@@ -43,69 +43,91 @@ export default {
       open_from,
       open_until,
       open_on_weekends: open_on_weekends === 'true',
-      images
-    }
+      images,
+    };
 
     const schema = Yup.object().shape({
       name: Yup.string().required('Nome não informado!'),
       latitude: Yup.number().required('Localização não informada!'),
       longitude: Yup.number().required('Localização não informada!'),
-      about: Yup.string().required('Informações sobre o orfanato não fornecidas!').max(500, 'Informação sobre o orfanado deve conter, no máximo, 500 caracteres!'),
+      about: Yup.string()
+        .required('Informações sobre o orfanato não fornecidas!')
+        .max(
+          500,
+          'Informação sobre o orfanado deve conter, no máximo, 500 caracteres!'
+        ),
       whatsapp: Yup.string().required('Número do Whatsapp não informado!'),
       images: Yup.array(
         Yup.object().shape({
-          path: Yup.string().required('Imagem não fornecida!')
+          path: Yup.string().required('Imagem não fornecida!'),
         })
       ),
-      open_from: Yup.string().required('Horário de abertura não informado!')
-        .matches(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/, { message: 'Horário de abertura inválido!'}),
-      open_until: Yup.string().required('Horário de fechamento não informado!')
-        .matches(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/, { message: 'Horário de fechamento inválido!'}),
-      instructions: Yup.string().required('Instruções de visitas não informadas!').max(500, 'Instruções de visitas deve conter, no máximo, 500 caracteres!'),
-      open_on_weekends: Yup.boolean().required('Não foi informado se recebe visitas nos finais de semana!')
+      open_from: Yup.string()
+        .required('Horário de abertura não informado!')
+        .matches(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/, {
+          message: 'Horário de abertura inválido!',
+        }),
+      open_until: Yup.string()
+        .required('Horário de fechamento não informado!')
+        .matches(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/, {
+          message: 'Horário de fechamento inválido!',
+        }),
+      instructions: Yup.string()
+        .required('Instruções de visitas não informadas!')
+        .max(
+          500,
+          'Instruções de visitas deve conter, no máximo, 500 caracteres!'
+        ),
+      open_on_weekends: Yup.boolean().required(
+        'Não foi informado se recebe visitas nos finais de semana!'
+      ),
     });
-    
+
     await schema.validate(data, {
-      abortEarly: false
+      abortEarly: false,
     });
 
     const newData = {
       ...data,
       open_from: convertHourToMinute(data.open_from),
-      open_until: convertHourToMinute(data.open_until)
-    }
-    
+      open_until: convertHourToMinute(data.open_until),
+    };
+
     if (newData.open_from > newData.open_until) {
       throw new Yup.ValidationError(
         'Horário de abertura após o horário de fechamento!',
-        null, ''
+        null,
+        ''
       );
-    }
-
-    else if (newData.open_until - newData.open_from < 30) {
+    } else if (newData.open_until - newData.open_from < 30) {
       throw new Yup.ValidationError(
         'Necessário, no mínimo, disponibilidade de 30 minutos para visitas!',
-        null, ''
+        null,
+        ''
       );
     }
 
     const orphanageByLocation = await orphanagesRepository
       .createQueryBuilder('orphanage')
-      .where('orphanage.latitude = :latitude AND orphanage.longitude = :longitude')
+      .where(
+        'orphanage.latitude = :latitude AND orphanage.longitude = :longitude'
+      )
       .setParameters({
-        latitude, longitude
+        latitude,
+        longitude,
       })
       .getOne();
 
     if (orphanageByLocation) {
       throw new Yup.ValidationError(
         'Existe um orfanato nessa localização!',
-        null, ''
+        null,
+        ''
       );
     }
 
     const orphanage = orphanagesRepository.create({ ...newData });
-  
+
     await orphanagesRepository.save(orphanage);
 
     return response.status(201).json();
@@ -113,12 +135,12 @@ export default {
 
   async index(request: Request, response: Response) {
     const orphanagesRepository = getRepository(Orphanage);
-  
+
     const orphanages = await orphanagesRepository.find({
       relations: ['images'],
       where: {
-        confirmed: true
-      }
+        confirmed: true,
+      },
     });
 
     return response.status(200).json(orphanagesView.renderMany(orphanages));
@@ -135,21 +157,22 @@ export default {
     const limit = perPage;
     const offset = perPage * (page - 1);
 
-    const quantityOrphanagesConfirmed = await orphanagesRepository
-      .count({ confirmed: true });
-  
+    const quantityOrphanagesConfirmed = await orphanagesRepository.count({
+      confirmed: true,
+    });
+
     const orphanages = await orphanagesRepository.find({
       relations: ['images'],
       skip: offset,
       take: limit,
       where: {
-        confirmed: true
-      }
+        confirmed: true,
+      },
     });
 
     return response.status(200).json({
       orphanages_by_page: orphanagesView.renderMany(orphanages),
-      quantity_confirmed: quantityOrphanagesConfirmed
+      quantity_confirmed: quantityOrphanagesConfirmed,
     });
   },
 
@@ -164,21 +187,22 @@ export default {
     const limit = perPage;
     const offset = perPage * (page - 1);
 
-    const quantityOrphanagesPending = await orphanagesRepository
-      .count({ confirmed: false });
-  
+    const quantityOrphanagesPending = await orphanagesRepository.count({
+      confirmed: false,
+    });
+
     const orphanages = await orphanagesRepository.find({
       relations: ['images'],
       skip: offset,
       take: limit,
       where: {
-        confirmed: false
-      }
+        confirmed: false,
+      },
     });
 
     return response.status(200).json({
       orphanages_by_page: orphanagesView.renderMany(orphanages),
-      quantity_pending: quantityOrphanagesPending
+      quantity_pending: quantityOrphanagesPending,
     });
   },
 
@@ -188,15 +212,13 @@ export default {
 
     try {
       const orphanage = await orphanagesRepository.findOneOrFail(id, {
-        relations: ['images']
+        relations: ['images'],
       });
 
       return response.status(200).json(orphanagesView.render(orphanage));
-    }
-
-    catch(e) {
+    } catch (e) {
       return response.status(400).json({
-        messagesError: ['Nenhum orfanato encontrado!']
+        messagesError: ['Nenhum orfanato encontrado!'],
       });
     }
   },
@@ -213,7 +235,7 @@ export default {
       instructions,
       open_from,
       open_until,
-      open_on_weekends
+      open_on_weekends,
     } = request.body;
 
     const requestImages = request.files as Express.Multer.File[];
@@ -223,16 +245,16 @@ export default {
     const orphanageById = await orphanagesRepository.findOne({
       relations: ['images'],
       where: {
-        id
-      }
+        id,
+      },
     });
 
     if (!orphanageById) {
       return response.status(400).json({
-        messagesError: ['Nenhum orfanato encontrado!']
+        messagesError: ['Nenhum orfanato encontrado!'],
       });
     }
-    
+
     const data = {
       name,
       latitude,
@@ -242,66 +264,91 @@ export default {
       instructions,
       open_from,
       open_until,
-      open_on_weekends: open_on_weekends === 'true'
-    }
+      open_on_weekends: open_on_weekends === 'true',
+    };
 
     const schema = Yup.object().shape({
       name: Yup.string().required('Nome não informado!'),
       latitude: Yup.number().required('Localização não informada!'),
       longitude: Yup.number().required('Localização não informada!'),
-      about: Yup.string().required('Informações sobre o orfanato não fornecidas!').max(500, 'Informação sobre o orfanado deve conter, no máximo, 500 caracteres!'),
+      about: Yup.string()
+        .required('Informações sobre o orfanato não fornecidas!')
+        .max(
+          500,
+          'Informação sobre o orfanado deve conter, no máximo, 500 caracteres!'
+        ),
       whatsapp: Yup.string().required('Número do Whatsapp não informado!'),
-      open_from: Yup.string().required('Horário de abertura não informado!')
-        .matches(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/, { message: 'Horário de abertura inválido!'}),
-      open_until: Yup.string().required('Horário de fechamento não informado!')
-        .matches(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/, { message: 'Horário de fechamento inválido!'}),
-      instructions: Yup.string().required('Instruções de visitas não informadas!').max(500, 'Instruções de visitas deve conter, no máximo, 500 caracteres!'),
-      open_on_weekends: Yup.boolean().required('Não foi informado se recebe visitas nos finais de semana!')
+      open_from: Yup.string()
+        .required('Horário de abertura não informado!')
+        .matches(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/, {
+          message: 'Horário de abertura inválido!',
+        }),
+      open_until: Yup.string()
+        .required('Horário de fechamento não informado!')
+        .matches(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/, {
+          message: 'Horário de fechamento inválido!',
+        }),
+      instructions: Yup.string()
+        .required('Instruções de visitas não informadas!')
+        .max(
+          500,
+          'Instruções de visitas deve conter, no máximo, 500 caracteres!'
+        ),
+      open_on_weekends: Yup.boolean().required(
+        'Não foi informado se recebe visitas nos finais de semana!'
+      ),
     });
-    
-    await schema.validate({ ...data }, {
-      abortEarly: false
-    });
+
+    await schema.validate(
+      { ...data },
+      {
+        abortEarly: false,
+      }
+    );
 
     const newData = {
       ...data,
       open_from: convertHourToMinute(data.open_from),
-      open_until: convertHourToMinute(data.open_until)
-    }
-    
+      open_until: convertHourToMinute(data.open_until),
+    };
+
     if (newData.open_from > newData.open_until) {
       throw new Yup.ValidationError(
         'Horário de abertura após o horário de fechamento!',
-        null, ''
+        null,
+        ''
+      );
+    } else if (newData.open_until - newData.open_from < 30) {
+      throw new Yup.ValidationError(
+        'Necessário, no mínimo, disponibilidade de 30 minutos para visitas!',
+        null,
+        ''
       );
     }
 
-    else if (newData.open_until - newData.open_from < 30) {
-      throw new Yup.ValidationError(
-        'Necessário, no mínimo, disponibilidade de 30 minutos para visitas!',
-        null, ''
-      );
-    }
-    
     const orphanageByLocation = await orphanagesRepository
       .createQueryBuilder('orphanage')
-      .where('id IS NOT :id AND orphanage.latitude = :latitude AND orphanage.longitude = :longitude')
+      .where(
+        'id IS NOT :id AND orphanage.latitude = :latitude AND orphanage.longitude = :longitude'
+      )
       .setParameters({
-        id, latitude, longitude
+        id,
+        latitude,
+        longitude,
       })
       .getOne();
 
     if (orphanageByLocation) {
       throw new Yup.ValidationError(
         'Existe um orfanato nessa localização!',
-        null, ''
+        null,
+        ''
       );
     }
 
-    await orphanagesRepository
-      .update(id, {
-        ...newData
-      });
+    await orphanagesRepository.update(id, {
+      ...newData,
+    });
 
     if (requestImages.length > 0) {
       const imagesRepository = getRepository(Image);
@@ -315,8 +362,8 @@ export default {
 
       const images = requestImages.map((image) => {
         return {
-          path: image.filename
-        }
+          path: image.filename,
+        };
       });
 
       await imagesRepository
@@ -324,17 +371,17 @@ export default {
         .delete()
         .where('id_orphanage = :id')
         .setParameters({
-          id
+          id,
         })
         .execute();
-      
+
       const orphanageUpdated = await orphanagesRepository.findOneOrFail({
         relations: ['images'],
         where: {
-          id
-        }
+          id,
+        },
       });
-  
+
       const newImages = images.map((image) => {
         const newImage = new Image();
         newImage.path = image.path;
@@ -342,7 +389,7 @@ export default {
 
         return newImage;
       });
-  
+
       const image = imagesRepository.create(newImages);
       await imagesRepository.save(image);
     }
@@ -358,13 +405,13 @@ export default {
     const orphanageById = await orphanagesRepository.findOne({
       relations: ['images'],
       where: {
-        id
-      }
+        id,
+      },
     });
 
     if (!orphanageById) {
       return response.status(400).json({
-        messagesError: ['Nenhum orfanato encontrado!']
+        messagesError: ['Nenhum orfanato encontrado!'],
       });
     }
 
@@ -373,7 +420,7 @@ export default {
       .delete()
       .where('id = :id')
       .setParameters({
-        id
+        id,
       })
       .execute();
 
@@ -388,21 +435,20 @@ export default {
     const orphanageById = await orphanagesRepository.findOne({
       relations: ['images'],
       where: {
-        id
-      }
+        id,
+      },
     });
 
     if (!orphanageById) {
       return response.status(400).json({
-        messagesError: ['Nenhum orfanato encontrado!']
+        messagesError: ['Nenhum orfanato encontrado!'],
       });
     }
 
-    await orphanagesRepository
-      .update(id, {
-        confirmed: true
-      });
+    await orphanagesRepository.update(id, {
+      confirmed: true,
+    });
 
     return response.status(204).json();
-  }
-}
+  },
+};

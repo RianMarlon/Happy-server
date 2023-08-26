@@ -10,16 +10,16 @@ const errorHandler: ErrorRequestHandler = (error, request, response, next) => {
   if (requestImages) {
     if (requestImages[0]) {
       return response.status(400).json({
-        messagesError: ['Formato da imagem fornecida não é aceito!']
+        messagesError: ['Formato da imagem fornecida não é aceito!'],
       });
     }
 
     const images = requestImages.map((image) => {
       return {
-        path: image.filename
-      }
+        path: image.filename,
+      };
     });
-  
+
     const filenames = images.map((image) => image.path);
 
     const destination = requestImages[0].destination;
@@ -37,9 +37,7 @@ const errorHandler: ErrorRequestHandler = (error, request, response, next) => {
     return response.status(400).json({
       messagesError,
     });
-  }
-
-  else if (error instanceof TokenExpiredError) {
+  } else if (error instanceof TokenExpiredError) {
     return response.status(401).json({
       messagesError: ['Token expirado'],
       is_valid_token: false,
@@ -47,8 +45,8 @@ const errorHandler: ErrorRequestHandler = (error, request, response, next) => {
   }
 
   return response.status(500).json({
-    messagesError: ['Erro no servidor!']
+    messagesError: ['Erro no servidor!'],
   });
-}
+};
 
 export default errorHandler;

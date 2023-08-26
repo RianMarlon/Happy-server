@@ -3,9 +3,9 @@ import fs from 'fs';
 import handlebers from 'handlebars';
 
 class SendMailService {
-  private client: Transporter
+  private client: Transporter;
   constructor() {
-    nodemailer.createTestAccount().then(account => {
+    nodemailer.createTestAccount().then((account) => {
       const transporter = nodemailer.createTransport({
         host: process.env.MAIL_SERVICE_HOST,
         port: Number(process.env.MAIL_SERVICE_PORT),
@@ -18,8 +18,8 @@ class SendMailService {
           accessToken: process.env.MAIL_SERVICE_ACCESS_TOKEN,
         },
         tls: {
-          rejectUnauthorized: false
-        }
+          rejectUnauthorized: false,
+        },
       });
 
       this.client = transporter;
@@ -27,11 +27,11 @@ class SendMailService {
   }
 
   async execute(
-    to: string, 
-    from: string, 
-    subject: string, 
-    variables: object, 
-    path: string,
+    to: string,
+    from: string,
+    subject: string,
+    variables: object,
+    path: string
   ) {
     const templateFileContent = fs.readFileSync(path).toString('utf8');
 
@@ -43,7 +43,7 @@ class SendMailService {
       to,
       from,
       subject,
-      html
+      html,
     });
   }
 }

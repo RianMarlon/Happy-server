@@ -21,15 +21,41 @@ routes.put('/change-password', AuthController.changePassword);
 routes.post('/validate-token', AuthController.validateToken);
 
 routes.get('/orphanages', authenticate, OrphanagesController.index);
-routes.post('/orphanages', authenticate, upload.array('images'), OrphanagesController.create);
+routes.post(
+  '/orphanages',
+  authenticate,
+  upload.array('images'),
+  OrphanagesController.create
+);
 routes.get('/orphanages/:id', authenticate, OrphanagesController.show);
 
-routes.put('/orphanages/:id', authenticateAdmin, upload.array('images'), OrphanagesController.update);
-routes.delete('/orphanages/:id', authenticateAdmin, OrphanagesController.destroy);
+routes.put(
+  '/orphanages/:id',
+  authenticateAdmin,
+  upload.array('images'),
+  OrphanagesController.update
+);
+routes.delete(
+  '/orphanages/:id',
+  authenticateAdmin,
+  OrphanagesController.destroy
+);
 
-routes.get('/orphanages-confirmed', authenticateAdmin, OrphanagesController.indexConfirmed);
-routes.get('/orphanages-pending', authenticateAdmin, OrphanagesController.indexPending);
+routes.get(
+  '/orphanages-confirmed',
+  authenticateAdmin,
+  OrphanagesController.indexConfirmed
+);
+routes.get(
+  '/orphanages-pending',
+  authenticateAdmin,
+  OrphanagesController.indexPending
+);
 
-routes.put('/orphanages/:id/confirm', authenticateAdmin, OrphanagesController.confirm);
+routes.put(
+  '/orphanages/:id/confirm',
+  authenticateAdmin,
+  OrphanagesController.confirm
+);
 
 export default routes;

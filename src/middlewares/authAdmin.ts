@@ -4,7 +4,11 @@ import { getRepository } from 'typeorm';
 
 import User from '../models/User';
 
-export default async function (request: Request, response: Response, next: NextFunction) {
+export default async function (
+  request: Request,
+  response: Response,
+  next: NextFunction
+) {
   const authHeader = request.headers.authorization;
 
   if (!authHeader) {
@@ -16,7 +20,7 @@ export default async function (request: Request, response: Response, next: NextF
   const usersRepository = getRepository(User);
 
   const [scheme, token] = authHeader.split(' ');
-  
+
   if (!token) {
     return response.status(401).json({
       error_messages: ['Acesso não autorizado!'],
@@ -29,15 +33,13 @@ export default async function (request: Request, response: Response, next: NextF
     .createQueryBuilder('user')
     .where('user.id = :id AND user.verified_email = true AND user.admin = true')
     .setParameters({
-      id: user.id
+      id: user.id,
     })
     .getOne();
- 
+
   if (userById) {
     return next();
-  }
-
-  else {
+  } else {
     return response.status(401).json({
       messagesError: ['Acesso não autorizado!'],
     });

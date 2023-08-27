@@ -107,13 +107,9 @@ export default {
         mailPath
       );
     } catch (err) {
-      if (err) {
-        return response.status(500).json({
-          messagesError: ['Não foi possível enviar o e-mail!'],
-        });
-      }
-
-      return response.status(200).json();
+      return response.status(500).json({
+        messagesError: ['Não foi possível enviar o e-mail!'],
+      });
     }
 
     return response.status(200).json();

@@ -22,7 +22,7 @@ const errorHandler: ErrorRequestHandler = (error, request, response, next) => {
 
     const filenames = images.map((image) => image.path);
 
-    const destination = requestImages[0].destination;
+    const destination = (requestImages[0] as any).destination;
 
     removeImages(destination, filenames);
   }

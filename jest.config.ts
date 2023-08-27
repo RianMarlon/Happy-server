@@ -5,7 +5,7 @@ const config: Config = {
   collectCoverage: true,
   coverageDirectory: 'coverage',
   coverageProvider: 'v8',
-  collectCoverageFrom: ['<rootDir>/src/**.ts'],
+  collectCoverageFrom: ['<rootDir>/src/*/**.ts'],
   coverageReporters: ['text-summary', 'lcov'],
   preset: 'ts-jest',
   testMatch: ['**/*.test.ts'],

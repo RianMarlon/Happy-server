@@ -100,34 +100,13 @@ export default {
       })
       .getOne();
 
-    const userAdmin = await usersRepository
-      .createQueryBuilder('user')
-      .where(
-        'user.id = :id AND user.verified_email = true AND user.admin = true'
-      )
-      .setParameters({
-        id,
-      })
-      .getOne();
-
     if (!userById) {
-      return response.status(200).json({
-        is_valid_token: false,
-        is_admin: false,
-      });
-    } else {
-      if (userAdmin) {
-        return response.status(200).json({
-          is_valid_token: true,
-          is_admin: true,
-        });
-      }
-
-      return response.status(200).json({
-        is_valid_token: true,
-        is_admin: false,
-      });
+      throw new Yup.ValidationError('Usuário não encontrado!', null, '');
     }
+
+    return response.status(200).json({
+      is_admin: userById.admin,
+    });
   },
 
   async forgotPassword(request: Request, response: Response) {

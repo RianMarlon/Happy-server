@@ -25,9 +25,9 @@ export default {
 
     const orphanagesRepository = getRepository(Orphanage);
 
-    const requestImages = request.files as Express.Multer.File[];
+    const requestImages = (request.files || []) as Express.Multer.File[];
 
-    const images = requestImages.map((image) => {
+    const images = requestImages?.map((image) => {
       return {
         path: image.filename,
       };

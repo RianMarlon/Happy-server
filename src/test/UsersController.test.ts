@@ -22,14 +22,17 @@ describe('AuthController Tests', () => {
     });
   });
 
-  beforeEach(async () => {
-    SendMailService.execute = jest.fn();
-    const usersRepository = getRepository(User);
-    await usersRepository.clear();
-  });
-
   afterAll(async () => {
     await connection.close();
+  });
+
+  beforeEach(async () => {
+    SendMailService.execute = jest.fn();
+  });
+
+  afterEach(async () => {
+    const usersRepository = getRepository(User);
+    await usersRepository.clear();
   });
 
   describe('/signup', () => {

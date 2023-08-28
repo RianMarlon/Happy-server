@@ -2,6 +2,7 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import crypto from 'crypto';
+import * as Yup from 'yup';
 
 const pathFiles = path.join(__dirname, '..', '..', 'uploads');
 
@@ -40,7 +41,13 @@ export default {
     if (allowedMimes.includes(file.mimetype)) {
       callback(null, true);
     } else {
-      callback(new Error('Formato da imagem fornecida não é aceito!'));
+      callback(
+        new Yup.ValidationError(
+          'Formato da imagem fornecida não é aceito!',
+          null,
+          ''
+        )
+      );
     }
   },
 };

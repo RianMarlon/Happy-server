@@ -8,12 +8,6 @@ const errorHandler: ErrorRequestHandler = (error, request, response, next) => {
   const requestImages = request.files as Express.Multer.File[];
 
   if (requestImages) {
-    if (requestImages[0]) {
-      return response.status(400).json({
-        messagesError: ['Formato da imagem fornecida não é aceito!'],
-      });
-    }
-
     const images = requestImages.map((image) => {
       return {
         path: image.filename,
@@ -22,9 +16,10 @@ const errorHandler: ErrorRequestHandler = (error, request, response, next) => {
 
     const filenames = images.map((image) => image.path);
 
-    const destination = (requestImages[0] as any).destination;
-
-    removeImages(destination, filenames);
+    if (requestImages[0]) {
+      const destination = (requestImages[0] as any).destination;
+      removeImages(destination, filenames);
+    }
   }
 
   if (error instanceof ValidationError) {

@@ -81,6 +81,69 @@ describe('OrphanagesController Tests', () => {
   });
 
   describe('/orphanages', () => {
+    describe('GET', () => {
+      it('should return all orphanages', async () => {
+        const orphanagesRepository = getRepository(Orphanage);
+        await orphanagesRepository.insert([
+          {
+            name: 'Teste',
+            latitude: -5.101444,
+            longitude: -38.369682,
+            about: 'Teste',
+            whatsapp: '9999999999',
+            instructions: 'Teste',
+            open_from: 1020,
+            open_until: 1140,
+            open_on_weekends: true,
+            confirmed: true,
+          },
+          {
+            name: 'Teste 2',
+            latitude: -5.096411,
+            longitude: -38.368701,
+            about: 'Teste 2',
+            whatsapp: '9999999999',
+            instructions: 'Teste',
+            open_from: 540,
+            open_until: 780,
+            open_on_weekends: true,
+            confirmed: true,
+          },
+          {
+            name: 'Teste 3',
+            latitude: -5.095159,
+            longitude: -38.371198,
+            about: 'Teste 3',
+            whatsapp: '9999999999',
+            instructions: 'Teste',
+            open_from: 900,
+            open_until: 1140,
+            open_on_weekends: true,
+            confirmed: true,
+          },
+        ]);
+        const response = await request(app)
+          .get('/orphanages')
+          .set({ Authorization: `Basic ${accessTokenUser}` });
+
+        expect(response.body.length).toBe(3);
+        expect(response.body[0]).toEqual({
+          about: 'Teste',
+          id: 1,
+          images: [],
+          instructions: 'Teste',
+          latitude: -5.101444,
+          longitude: -38.369682,
+          name: 'Teste',
+          open_from: '17:00',
+          open_on_weekends: true,
+          open_until: '19:00',
+          whatsapp: '9999999999',
+        });
+        expect(response.status).toBe(200);
+      });
+    });
+
     describe('POST', () => {
       it('should register a new orphanage', async () => {
         const response = await request(app)

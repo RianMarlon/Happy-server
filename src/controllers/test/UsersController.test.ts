@@ -6,10 +6,10 @@ import {
   getRepository,
 } from 'typeorm';
 
-import { app } from '../app';
-import User from '../models/User';
+import { app } from '../../app';
+import User from '../../models/User';
 
-import SendMailService from '../services/SendMailService';
+import SendMailService from '../../services/SendMailService';
 
 describe('AuthController Tests', () => {
   let connection: Connection;

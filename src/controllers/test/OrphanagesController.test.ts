@@ -7,12 +7,12 @@ import {
 } from 'typeorm';
 import path from 'path';
 
-import User from '../models/User';
-import Image from '../models/Image';
-import Orphanage from '../models/Orphanage';
-import { app } from '../app';
+import User from '../../models/User';
+import Image from '../../models/Image';
+import Orphanage from '../../models/Orphanage';
+import { app } from '../../app';
 
-import SendMailService from '../services/SendMailService';
+import SendMailService from '../../services/SendMailService';
 
 interface IUserData {
   first_name: string;
@@ -245,7 +245,10 @@ describe('OrphanagesController Tests', () => {
           .field('open_from', '14:00')
           .field('open_until', '17:00')
           .field('open_on_weekends', 'false')
-          .attach('images', path.resolve(__dirname, '../../mocks/image.jpeg'))
+          .attach(
+            'images',
+            path.resolve(__dirname, '../../../mocks/image.jpeg')
+          )
           .set({ Authorization: `Basic ${accessTokenUser}` });
 
         expect(response.status).toBe(201);
@@ -264,7 +267,10 @@ describe('OrphanagesController Tests', () => {
           .field('open_from', '14:00')
           .field('open_until', '17:00')
           .field('open_on_weekends', 'false')
-          .attach('images', path.resolve(__dirname, '../../mocks/file-1.txt'))
+          .attach(
+            'images',
+            path.resolve(__dirname, '../../../mocks/file-1.txt')
+          )
           .set({ Authorization: `Basic ${accessTokenUser}` });
 
         expect(response.body).toEqual({
@@ -428,7 +434,10 @@ describe('OrphanagesController Tests', () => {
           .field('open_from', '10:00')
           .field('open_until', '13:00')
           .field('open_on_weekends', 'true')
-          .attach('images', path.resolve(__dirname, '../../mocks/image.jpeg'))
+          .attach(
+            'images',
+            path.resolve(__dirname, '../../../mocks/image.jpeg')
+          )
           .set({ Authorization: `Basic ${accessTokenAdmin}` });
 
         expect(response.status).toBe(204);
@@ -447,7 +456,10 @@ describe('OrphanagesController Tests', () => {
           .field('open_from', '10:00')
           .field('open_until', '13:00')
           .field('open_on_weekends', 'true')
-          .attach('images', path.resolve(__dirname, '../../mocks/image.jpeg'))
+          .attach(
+            'images',
+            path.resolve(__dirname, '../../../mocks/image.jpeg')
+          )
           .set({ Authorization: `Basic ${accessTokenAdmin}` });
 
         expect(response.body).toEqual({
@@ -498,7 +510,10 @@ describe('OrphanagesController Tests', () => {
           .field('open_from', '10:00')
           .field('open_until', '13:00')
           .field('open_on_weekends', 'true')
-          .attach('images', path.resolve(__dirname, '../../mocks/image.jpeg'))
+          .attach(
+            'images',
+            path.resolve(__dirname, '../../../mocks/image.jpeg')
+          )
           .set({ Authorization: `Basic ${accessTokenAdmin}` });
 
         expect(response.body).toEqual({
@@ -536,7 +551,10 @@ describe('OrphanagesController Tests', () => {
           .field('open_from', '13:00')
           .field('open_until', '10:00')
           .field('open_on_weekends', 'true')
-          .attach('images', path.resolve(__dirname, '../../mocks/image.jpeg'))
+          .attach(
+            'images',
+            path.resolve(__dirname, '../../../mocks/image.jpeg')
+          )
           .set({ Authorization: `Basic ${accessTokenAdmin}` });
 
         expect(response.body).toEqual({
@@ -574,7 +592,10 @@ describe('OrphanagesController Tests', () => {
           .field('open_from', '13:00')
           .field('open_until', '13:20')
           .field('open_on_weekends', 'true')
-          .attach('images', path.resolve(__dirname, '../../mocks/image.jpeg'))
+          .attach(
+            'images',
+            path.resolve(__dirname, '../../../mocks/image.jpeg')
+          )
           .set({ Authorization: `Basic ${accessTokenAdmin}` });
 
         expect(response.body).toEqual({
@@ -657,6 +678,43 @@ describe('OrphanagesController Tests', () => {
             'Horário de abertura inválido!',
             'Horário de fechamento inválido!',
           ],
+        });
+        expect(response.status).toBe(400);
+      });
+    });
+
+    describe('DELETE /:id', () => {
+      it('should delete orphanage by id', async () => {
+        const orphanagesRepository = getRepository(Orphanage);
+        await orphanagesRepository.insert([
+          {
+            id: 1,
+            name: 'Teste',
+            latitude: -5.101444,
+            longitude: -38.369682,
+            about: 'Teste',
+            whatsapp: '9999999999',
+            instructions: 'Teste',
+            open_from: 1020,
+            open_until: 1140,
+            open_on_weekends: true,
+            confirmed: true,
+          },
+        ]);
+        const response = await request(app)
+          .delete('/orphanages/1')
+          .set({ Authorization: `Basic ${accessTokenAdmin}` });
+
+        expect(response.status).toBe(200);
+      });
+
+      it('should return an error when the orphanage not exists', async () => {
+        const response = await request(app)
+          .delete('/orphanages/1')
+          .set({ Authorization: `Basic ${accessTokenAdmin}` });
+
+        expect(response.body).toEqual({
+          messagesError: ['Nenhum orfanato encontrado!'],
         });
         expect(response.status).toBe(400);
       });

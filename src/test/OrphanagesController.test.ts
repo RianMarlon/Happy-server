@@ -81,7 +81,7 @@ describe('OrphanagesController Tests', () => {
   });
 
   describe('/orphanages', () => {
-    describe('GET', () => {
+    describe('GET /', () => {
       it('should return all orphanages', async () => {
         const orphanagesRepository = getRepository(Orphanage);
         await orphanagesRepository.insert([
@@ -144,7 +144,83 @@ describe('OrphanagesController Tests', () => {
       });
     });
 
-    describe('POST', () => {
+    describe('GET /:id', () => {
+      it('should return orphanage by id', async () => {
+        const orphanagesRepository = getRepository(Orphanage);
+        await orphanagesRepository.insert([
+          {
+            id: 1,
+            name: 'Teste',
+            latitude: -5.101444,
+            longitude: -38.369682,
+            about: 'Teste',
+            whatsapp: '9999999999',
+            instructions: 'Teste',
+            open_from: 1020,
+            open_until: 1140,
+            open_on_weekends: true,
+            confirmed: true,
+          },
+          {
+            id: 2,
+            name: 'Teste 2',
+            latitude: -5.096411,
+            longitude: -38.368701,
+            about: 'Teste 2',
+            whatsapp: '9999999999',
+            instructions: 'Teste',
+            open_from: 540,
+            open_until: 780,
+            open_on_weekends: true,
+            confirmed: true,
+          },
+          {
+            id: 3,
+            name: 'Teste 3',
+            latitude: -5.095159,
+            longitude: -38.371198,
+            about: 'Teste 3',
+            whatsapp: '9999999999',
+            instructions: 'Teste',
+            open_from: 900,
+            open_until: 1140,
+            open_on_weekends: true,
+            confirmed: true,
+          },
+        ]);
+        const response = await request(app)
+          .get('/orphanages/3')
+          .set({ Authorization: `Basic ${accessTokenUser}` });
+
+        expect(response.body).toEqual({
+          about: 'Teste 3',
+          id: 3,
+          images: [],
+          instructions: 'Teste',
+          latitude: -5.095159,
+          longitude: -38.371198,
+          name: 'Teste 3',
+          open_from: '15:00',
+          open_on_weekends: true,
+          open_until: '19:00',
+          whatsapp: '9999999999',
+        });
+        expect(response.status).toBe(200);
+      });
+
+      it('should return an error when the orphanage not exists', async () => {
+        const response = await request(app)
+          .get('/orphanages/1')
+          .set({ Authorization: `Basic ${accessTokenUser}` });
+
+        expect(response.body).toEqual({
+          messagesError: ['Nenhum orfanato encontrado!'],
+        });
+        expect(response.status).toBe(400);
+      });
+    });
+
+    describe('POST /', () => {
       it('should register a new orphanage', async () => {
         const response = await request(app)
           .post('/orphanages')

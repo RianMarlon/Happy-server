@@ -23,7 +23,7 @@ export default async function (
 
   if (!token) {
     return response.status(401).json({
-      error_messages: ['Acesso não autorizado!'],
+      messagesError: ['Acesso não autorizado!'],
     });
   }
 

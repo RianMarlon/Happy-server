@@ -12,7 +12,8 @@
     "seed:run": "ts-node-dev ./node_modules/typeorm-seeding/dist/cli.js seed",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint --fix --ext .ts .",
-    "test": "jest"
+    "test": "jest",
+    "prepare": "husky install"
   },
   "engines": {
     "node": "16.x.x"
@@ -51,6 +52,7 @@
     "eslint": "~8.17.0",
     "eslint-config": "^0.3.0",
     "eslint-plugin-prettier": "^5.0.0",
+    "husky": "^8.0.3",
     "jest": "^29.6.4",
     "prettier": "^3.0.2",
     "supertest": "^6.3.3",

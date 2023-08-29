@@ -683,6 +683,43 @@ describe('OrphanagesController Tests', () => {
       });
     });
 
+    describe('PUT /:id/confirm', () => {
+      it('should confirm a orphanage pending by id', async () => {
+        const orphanagesRepository = getRepository(Orphanage);
+        await orphanagesRepository.insert([
+          {
+            id: 1,
+            name: 'Teste',
+            latitude: -5.101444,
+            longitude: -38.369682,
+            about: 'Teste',
+            whatsapp: '9999999999',
+            instructions: 'Teste',
+            open_from: 1020,
+            open_until: 1140,
+            open_on_weekends: true,
+            confirmed: false,
+          },
+        ]);
+        const response = await request(app)
+          .put('/orphanages/1/confirm')
+          .set({ Authorization: `Basic ${accessTokenAdmin}` });
+
+        expect(response.status).toBe(204);
+      });
+
+      it('should return an error when the orphanage not exists', async () => {
+        const response = await request(app)
+          .put('/orphanages/1/confirm')
+          .set({ Authorization: `Basic ${accessTokenAdmin}` });
+
+        expect(response.body).toEqual({
+          messagesError: ['Nenhum orfanato encontrado!'],
+        });
+        expect(response.status).toBe(400);
+      });
+    });
+
     describe('DELETE /:id', () => {
       it('should delete orphanage by id', async () => {
         const orphanagesRepository = getRepository(Orphanage);

@@ -152,7 +152,7 @@ export default {
     const filters = request.query;
 
     const page = Number(filters.page as string) || 1;
-    const perPage = Number(filters.per_page as string) || 1;
+    const perPage = Number(filters.per_page as string) || 10;
 
     const limit = perPage;
     const offset = perPage * (page - 1);
@@ -182,7 +182,7 @@ export default {
     const filters = request.query;
 
     const page = Number(filters.page as string) || 1;
-    const perPage = Number(filters.per_page as string) || 1;
+    const perPage = Number(filters.per_page as string) || 10;
 
     const limit = perPage;
     const offset = perPage * (page - 1);

@@ -757,4 +757,87 @@ describe('OrphanagesController Tests', () => {
       });
     });
   });
+
+  describe('/orphanages-confirmed', () => {
+    describe('GET /', () => {
+      it('should return all orphanages confirmed', async () => {
+        const orphanagesRepository = getRepository(Orphanage);
+        await orphanagesRepository.insert([
+          {
+            id: 1,
+            name: 'Teste',
+            latitude: -5.101444,
+            longitude: -38.369682,
+            about: 'Teste',
+            whatsapp: '9999999999',
+            instructions: 'Teste',
+            open_from: 1020,
+            open_until: 1140,
+            open_on_weekends: true,
+            confirmed: true,
+          },
+          {
+            id: 2,
+            name: 'Teste 2',
+            latitude: -5.096411,
+            longitude: -38.368701,
+            about: 'Teste 2',
+            whatsapp: '9999999999',
+            instructions: 'Teste',
+            open_from: 540,
+            open_until: 780,
+            open_on_weekends: true,
+            confirmed: false,
+          },
+          {
+            id: 3,
+            name: 'Teste 3',
+            latitude: -5.095159,
+            longitude: -38.371198,
+            about: 'Teste 3',
+            whatsapp: '9999999999',
+            instructions: 'Teste',
+            open_from: 900,
+            open_until: 1140,
+            open_on_weekends: true,
+            confirmed: true,
+          },
+        ]);
+        const response = await request(app)
+          .get('/orphanages-confirmed')
+          .set({ Authorization: `Basic ${accessTokenAdmin}` });
+
+        const { orphanages_by_page, quantity_confirmed } = response.body;
+
+        expect(orphanages_by_page.length).toBe(2);
+        expect(quantity_confirmed).toBe(2);
+        expect(orphanages_by_page[0]).toEqual({
+          about: 'Teste',
+          id: 1,
+          images: [],
+          instructions: 'Teste',
+          latitude: -5.101444,
+          longitude: -38.369682,
+          name: 'Teste',
+          open_from: '17:00',
+          open_on_weekends: true,
+          open_until: '19:00',
+          whatsapp: '9999999999',
+        });
+        expect(response.status).toBe(200);
+      });
+
+      it('should return an empty array when not exists an orphanage confirmed', async () => {
+        const response = await request(app)
+          .get('/orphanages-confirmed')
+          .set({ Authorization: `Basic ${accessTokenAdmin}` });
+
+        const { orphanages_by_page, quantity_confirmed } = response.body;
+
+        expect(orphanages_by_page.length).toBe(0);
+        expect(quantity_confirmed).toBe(0);
+        expect(response.status).toBe(200);
+      });
+    });
+  });
 });

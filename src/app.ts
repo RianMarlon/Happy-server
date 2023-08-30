@@ -6,7 +6,7 @@ import 'dotenv/config';
 
 import './database/connection';
 import routes from './routes';
-import errorHandler from './errors/handler';
+import errorHandler from './shared/errors/handler';
 
 const app = express();
 

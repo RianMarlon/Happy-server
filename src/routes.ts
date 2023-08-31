@@ -8,12 +8,14 @@ import authenticate from './middlewares/auth';
 import authenticateAdmin from './middlewares/authAdmin';
 
 import CreateOrphanageController from './modules/orphanages/infra/http/controllers/create-orphanage-controller';
+import ShowOrphanageController from './modules/orphanages/infra/http/controllers/show-orphanage-controller';
 
 import uploadConfig from './config/upload';
 
 const routes = Router();
 const upload = multer(uploadConfig);
 const createOrphanageController = new CreateOrphanageController();
+const showOrphanageController = new ShowOrphanageController();
 
 routes.post('/signup', UsersController.create);
 routes.post('/signin', AuthController.signin);
@@ -30,7 +32,11 @@ routes.post(
   upload.array('images'),
   createOrphanageController.handleRequest
 );
-routes.get('/orphanages/:id', authenticate, OrphanagesController.show);
+routes.get(
+  '/orphanages/:id',
+  authenticate,
+  showOrphanageController.handleRequest
+);
 
 routes.put(
   '/orphanages/:id',

@@ -41,6 +41,7 @@ class OrphanagesRepository implements IOrphanagesRepository {
 
   async findByLocation(location: ILocation): Promise<Orphanage | undefined> {
     return await this.repository.findOne({
+      relations: ['images'],
       where: {
         latitude: location.latitude,
         longitude: location.longitude,
@@ -50,6 +51,7 @@ class OrphanagesRepository implements IOrphanagesRepository {
 
   async findById(id: number): Promise<Orphanage | undefined> {
     return await this.repository.findOne({
+      relations: ['images'],
       where: {
         id,
       },

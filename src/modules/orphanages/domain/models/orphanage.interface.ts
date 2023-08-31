@@ -10,6 +10,7 @@ export interface IOrphanage {
   instructions: string;
   open_from: number;
   open_until: number;
+  open_on_weekends: boolean;
   confirmed: boolean;
   images: Image[];
 }

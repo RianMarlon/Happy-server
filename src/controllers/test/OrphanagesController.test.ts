@@ -228,7 +228,7 @@ describe('OrphanagesController Tests', () => {
         expect(response.body).toEqual({
           messagesError: ['Nenhum orfanato encontrado!'],
         });
-        expect(response.status).toBe(400);
+        expect(response.status).toBe(404);
       });
     });
 

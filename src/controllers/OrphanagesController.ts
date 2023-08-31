@@ -84,23 +84,6 @@ export default {
     });
   },
 
-  async show(request: Request, response: Response) {
-    const { id } = request.params;
-    const orphanagesRepository = getRepository(Orphanage);
-
-    try {
-      const orphanage = await orphanagesRepository.findOneOrFail(id, {
-        relations: ['images'],
-      });
-
-      return response.status(200).json(orphanagesView.render(orphanage));
-    } catch (e) {
-      return response.status(400).json({
-        messagesError: ['Nenhum orfanato encontrado!'],
-      });
-    }
-  },
-
   async update(request: Request, response: Response) {
     const { id } = request.params;
 

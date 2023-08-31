@@ -1,4 +1,4 @@
-import Image from '../models/Image';
+import Image from '../modules/images/infra/typeorm/entities/image';
 import 'dotenv/config';
 
 export default {

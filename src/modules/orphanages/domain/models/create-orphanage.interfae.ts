@@ -7,7 +7,7 @@ export interface ICreateOrphanage {
   instructions: string;
   open_from: number;
   open_until: number;
-  confirmed: boolean;
+  open_on_weekends: boolean;
   images: {
     path: string;
   }[];

@@ -24,8 +24,7 @@ const errorHandler: ErrorRequestHandler = (error, request, response, next) => {
 
   if (error instanceof AppError) {
     return response.status(error.statusCode).json({
-      status: 'error',
-      message: error.message,
+      messagesError: [error.message],
     });
   } else if (error instanceof ValidationError) {
     const messagesError: string[] = [];

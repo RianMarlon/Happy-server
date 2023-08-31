@@ -7,10 +7,13 @@ import AuthController from './controllers/AuthController';
 import authenticate from './middlewares/auth';
 import authenticateAdmin from './middlewares/authAdmin';
 
+import CreateOrphanageController from './modules/orphanages/infra/http/controllers/create-orphanage-controller';
+
 import uploadConfig from './config/upload';
 
 const routes = Router();
 const upload = multer(uploadConfig);
+const createOrphanageController = new CreateOrphanageController();
 
 routes.post('/signup', UsersController.create);
 routes.post('/signin', AuthController.signin);
@@ -25,7 +28,7 @@ routes.post(
   '/orphanages',
   authenticate,
   upload.array('images'),
-  OrphanagesController.create
+  createOrphanageController.handleRequest
 );
 routes.get('/orphanages/:id', authenticate, OrphanagesController.show);
 

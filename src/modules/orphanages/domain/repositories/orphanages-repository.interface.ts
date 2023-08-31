@@ -1,7 +1,7 @@
 import { ICreateOrphanage } from '../models/create-orphanage.interfae';
 import { IOrphanage } from '../models/orphanage.interface';
 
-interface ILocation {
+export interface ILocation {
   latitude: number;
   longitude: number;
 }
@@ -12,12 +12,12 @@ export interface IOrphanagesRepository {
     skip: number,
     take: number
   ): Promise<IOrphanage[]>;
-  findByLocation(location: ILocation): Promise<IOrphanage>;
-  findById(id: string): Promise<IOrphanage | null>;
+  findByLocation(location: ILocation): Promise<IOrphanage | undefined>;
+  findById(id: number): Promise<IOrphanage | undefined>;
   create(orphanageToCreate: ICreateOrphanage): Promise<IOrphanage>;
   update(
-    id: string,
+    id: number,
     orphanageToUpdate: Partial<ICreateOrphanage>
   ): Promise<IOrphanage>;
-  delete(id: string): Promise<void>;
+  delete(id: number): Promise<void>;
 }

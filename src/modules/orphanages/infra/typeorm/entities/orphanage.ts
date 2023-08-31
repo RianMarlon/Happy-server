@@ -5,10 +5,13 @@ import {
   OneToMany,
   JoinColumn,
 } from 'typeorm';
-import Image from './Image';
+
+import { IOrphanage } from '../../../domain/models/orphanage.interface';
+
+import Image from '../../../../images/infra/typeorm/entities/image';
 
 @Entity('orphanages')
-export default class Orphanage {
+class Orphanage implements IOrphanage {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
@@ -39,12 +42,14 @@ export default class Orphanage {
   @Column()
   open_on_weekends: boolean;
 
+  @Column({ default: 0 })
+  confirmed: boolean;
+
   @OneToMany(() => Image, (image) => image.orphanage, {
     cascade: ['insert', 'update'],
   })
   @JoinColumn({ name: 'id_orphanage' })
   images: Image[];
-
-  @Column({ default: 0 })
-  confirmed: boolean;
 }
+
+export default Orphanage;

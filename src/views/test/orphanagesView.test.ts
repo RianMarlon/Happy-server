@@ -1,4 +1,4 @@
-import Orphanage from '../../models/Orphanage';
+import Orphanage from '../../modules/orphanages/infra/typeorm/entities/orphanage';
 import orphanagesView from '../orphanagesView';
 
 describe('orphanagesView Tests', () => {

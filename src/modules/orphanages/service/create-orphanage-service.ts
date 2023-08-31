@@ -12,8 +12,10 @@ interface IRequest {
   instructions: string;
   open_from: string;
   open_until: string;
-  confirmed: boolean;
-  files: string[];
+  open_on_weekends: boolean;
+  images: {
+    path: string;
+  }[];
 }
 
 class CreateOrphanageService {
@@ -24,9 +26,6 @@ class CreateOrphanageService {
       ...data,
       open_from: convertHourToMinute(data.open_from),
       open_until: convertHourToMinute(data.open_until),
-      images: data.files.map((path) => ({
-        path,
-      })),
     };
 
     if (newOrphanage.open_from > newOrphanage.open_until) {

@@ -8,8 +8,9 @@ import {
 import path from 'path';
 
 import User from '../../models/User';
-import Image from '../../models/Image';
-import Orphanage from '../../models/Orphanage';
+import Orphanage from '../../modules/orphanages/infra/typeorm/entities/orphanage';
+import Image from '../../modules/images/infra/typeorm/entities/image';
+
 import { app } from '../../app';
 
 import SendMailService from '../../services/SendMailService';

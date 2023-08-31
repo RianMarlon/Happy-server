@@ -7,19 +7,17 @@ module.exports = [
     username: process.env.TYPEORM_USERNAME,
     password: process.env.TYPEORM_PASSWORD,
     database: process.env.TYPEORM_DATABASE,
-    entities: [process.env.TYPEORM_ENTITIES],
-    migrations: [process.env.TYPEORM_MIGRATIONS],
-    seeds: [process.env.TYPEORM_SEEDING_SEEDS],
-    factories: [process.env.TYPEORM_SEEDING_FACTORIES],
+    entities: ['src/models/*.ts', './src/**/infra/typeorm/entities/*.ts'],
+    migrations: ['./src/database/migrations/'],
     cli: {
-      migrationsDir: process.env.TYPEORM_MIGRATIONS_DIR,
+      migrationsDir: './src/database/migrations/',
     },
   },
   {
     name: 'test',
     type: 'better-sqlite3',
     database: ':memory:',
-    entities: ['src/models/*.ts'],
+    entities: ['src/models/*.ts', './src/**/infra/typeorm/entities/*.ts'],
     synchronize: true,
   },
 ];

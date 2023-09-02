@@ -11,6 +11,7 @@ import ShowOrphanageController from './modules/orphanages/infra/http/controllers
 import CreateOrphanageController from './modules/orphanages/infra/http/controllers/create-orphanage-controller';
 import UpdateOrphanageController from './modules/orphanages/infra/http/controllers/update-orphanage-controller';
 import DeleteOrphanageController from './modules/orphanages/infra/http/controllers/delete-orphanage-controller';
+import ConfirmOrphanageController from './modules/orphanages/infra/http/controllers/confirm-orphanage-controller';
 
 import uploadConfig from './config/upload';
 
@@ -19,6 +20,7 @@ const upload = multer(uploadConfig);
 const createOrphanageController = new CreateOrphanageController();
 const updateOrphanageController = new UpdateOrphanageController();
 const deleteOrphanageController = new DeleteOrphanageController();
+const confirmOrphanageController = new ConfirmOrphanageController();
 const showOrphanageController = new ShowOrphanageController();
 
 routes.post('/signup', UsersController.create);
@@ -68,7 +70,7 @@ routes.get(
 routes.put(
   '/orphanages/:id/confirm',
   authenticateAdmin,
-  OrphanagesController.confirm
+  confirmOrphanageController.handleRequest
 );
 
 routes.get('/status', (request: Request, response: Response) => {

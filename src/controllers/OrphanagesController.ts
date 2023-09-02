@@ -78,29 +78,4 @@ export default {
       quantity_pending: quantityOrphanagesPending,
     });
   },
-
-  async confirm(request: Request, response: Response) {
-    const { id } = request.params;
-
-    const orphanagesRepository = getRepository(Orphanage);
-
-    const orphanageById = await orphanagesRepository.findOne({
-      relations: ['images'],
-      where: {
-        id,
-      },
-    });
-
-    if (!orphanageById) {
-      return response.status(400).json({
-        messagesError: ['Nenhum orfanato encontrado!'],
-      });
-    }
-
-    await orphanagesRepository.update(id, {
-      confirmed: true,
-    });
-
-    return response.status(204).json();
-  },
 };

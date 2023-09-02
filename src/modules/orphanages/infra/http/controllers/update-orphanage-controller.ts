@@ -97,7 +97,7 @@ class UpdateOrphanageController {
     );
     await updateOrphanageService.execute(Number(id), data);
 
-    return response.status(201).json();
+    return response.status(200).json();
   }
 }
 

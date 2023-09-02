@@ -441,7 +441,7 @@ describe('OrphanagesController Tests', () => {
           )
           .set({ Authorization: `Basic ${accessTokenAdmin}` });
 
-        expect(response.status).toBe(201);
+        expect(response.status).toBe(200);
       });
 
       it('should return an error when the orphanage not exists', async () => {
@@ -706,7 +706,7 @@ describe('OrphanagesController Tests', () => {
           .put('/orphanages/1/confirm')
           .set({ Authorization: `Basic ${accessTokenAdmin}` });
 
-        expect(response.status).toBe(204);
+        expect(response.status).toBe(200);
       });
 
       it('should return an error when the orphanage not exists', async () => {
@@ -717,7 +717,7 @@ describe('OrphanagesController Tests', () => {
         expect(response.body).toEqual({
           messagesError: ['Nenhum orfanato encontrado!'],
         });
-        expect(response.status).toBe(400);
+        expect(response.status).toBe(404);
       });
     });
 

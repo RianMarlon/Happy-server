@@ -8,6 +8,7 @@ import authenticate from './middlewares/auth';
 import authenticateAdmin from './middlewares/authAdmin';
 
 import FindAllOrphanagesController from './modules/orphanages/infra/http/controllers/find-all-orphanages-controller';
+import FindAllOrphanagesConfirmedController from './modules/orphanages/infra/http/controllers/find-all-orphanages-confirmed-controller';
 import ShowOrphanageController from './modules/orphanages/infra/http/controllers/show-orphanage-controller';
 import CreateOrphanageController from './modules/orphanages/infra/http/controllers/create-orphanage-controller';
 import UpdateOrphanageController from './modules/orphanages/infra/http/controllers/update-orphanage-controller';
@@ -20,6 +21,8 @@ const routes = Router();
 const upload = multer(uploadConfig);
 
 const findAllOrphanagesController = new FindAllOrphanagesController();
+const findAllOrphanagesConfirmedController =
+  new FindAllOrphanagesConfirmedController();
 const showOrphanageController = new ShowOrphanageController();
 const createOrphanageController = new CreateOrphanageController();
 const updateOrphanageController = new UpdateOrphanageController();
@@ -66,7 +69,7 @@ routes.delete(
 routes.get(
   '/orphanages-confirmed',
   authenticateAdmin,
-  OrphanagesController.indexConfirmed
+  findAllOrphanagesConfirmedController.handleRequest
 );
 routes.get(
   '/orphanages-pending',

@@ -45,6 +45,8 @@ async function createUserAndReturnAccessToken(
   return response.body.token;
 }
 
+jest.useRealTimers();
+
 describe('OrphanagesController Tests', () => {
   let connection: Connection;
   let accessTokenUser: string;

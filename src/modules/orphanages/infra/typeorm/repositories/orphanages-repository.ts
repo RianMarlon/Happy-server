@@ -58,6 +58,14 @@ class OrphanagesRepository implements IOrphanagesRepository {
     });
   }
 
+  async count(confirmed: boolean): Promise<number> {
+    return await this.repository.count({
+      where: {
+        confirmed,
+      },
+    });
+  }
+
   async create(orphanageToCreate: ICreateOrphanage): Promise<Orphanage> {
     const orphanageCreated = this.repository.create(orphanageToCreate);
     await this.repository.save(orphanageCreated);

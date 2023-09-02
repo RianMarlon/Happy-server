@@ -5,7 +5,11 @@ const config: Config = {
   collectCoverage: true,
   coverageDirectory: 'coverage',
   coverageProvider: 'v8',
-  collectCoverageFrom: ['<rootDir>/src/*/**.ts'],
+  collectCoverageFrom: [
+    '<rootDir>/src/**/**.ts',
+    '!<rootDir>/src/modules/**/domain/**/**.ts',
+    '!<rootDir>/src/database/**/**.ts',
+  ],
   coverageReporters: ['text-summary', 'lcov'],
   preset: 'ts-jest',
   testMatch: ['**/*.test.ts'],

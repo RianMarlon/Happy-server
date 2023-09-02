@@ -1,4 +1,4 @@
-import { Image } from '../../../images/domain/models/image.interface';
+import { IImage } from '../../../images/domain/models/image.interface';
 
 export interface IOrphanage {
   id: number;
@@ -12,5 +12,5 @@ export interface IOrphanage {
   open_until: number;
   open_on_weekends: boolean;
   confirmed: boolean;
-  images: Image[];
+  images: IImage[];
 }

@@ -9,8 +9,8 @@ export interface ILocation {
 export interface IOrphanagesRepository {
   findAll(
     confirmed: boolean,
-    skip: number,
-    take: number
+    skip?: number,
+    take?: number
   ): Promise<IOrphanage[]>;
   findByLocation(location: ILocation): Promise<IOrphanage | undefined>;
   findById(id: number): Promise<IOrphanage | undefined>;

@@ -17,8 +17,8 @@ class OrphanagesRepository implements IOrphanagesRepository {
 
   async findAll(
     confirmed: boolean,
-    skip: number | null,
-    take: number | null
+    skip?: number,
+    take?: number
   ): Promise<Orphanage[]> {
     if (skip && take) {
       return await this.repository.find({

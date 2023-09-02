@@ -7,6 +7,7 @@ import AuthController from './controllers/AuthController';
 import authenticate from './middlewares/auth';
 import authenticateAdmin from './middlewares/authAdmin';
 
+import FindAllOrphanagesController from './modules/orphanages/infra/http/controllers/find-all-orphanages-controller';
 import ShowOrphanageController from './modules/orphanages/infra/http/controllers/show-orphanage-controller';
 import CreateOrphanageController from './modules/orphanages/infra/http/controllers/create-orphanage-controller';
 import UpdateOrphanageController from './modules/orphanages/infra/http/controllers/update-orphanage-controller';
@@ -17,11 +18,13 @@ import uploadConfig from './config/upload';
 
 const routes = Router();
 const upload = multer(uploadConfig);
+
+const findAllOrphanagesController = new FindAllOrphanagesController();
+const showOrphanageController = new ShowOrphanageController();
 const createOrphanageController = new CreateOrphanageController();
 const updateOrphanageController = new UpdateOrphanageController();
-const deleteOrphanageController = new DeleteOrphanageController();
 const confirmOrphanageController = new ConfirmOrphanageController();
-const showOrphanageController = new ShowOrphanageController();
+const deleteOrphanageController = new DeleteOrphanageController();
 
 routes.post('/signup', UsersController.create);
 routes.post('/signin', AuthController.signin);
@@ -31,7 +34,11 @@ routes.post('/forgot-password', AuthController.forgotPassword);
 routes.put('/change-password', AuthController.changePassword);
 routes.post('/validate-token', AuthController.validateToken);
 
-routes.get('/orphanages', authenticate, OrphanagesController.index);
+routes.get(
+  '/orphanages',
+  authenticate,
+  findAllOrphanagesController.handleRequest
+);
 routes.post(
   '/orphanages',
   authenticate,

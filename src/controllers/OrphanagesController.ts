@@ -6,19 +6,6 @@ import Orphanage from '../modules/orphanages/infra/typeorm/entities/orphanage';
 import orphanagesView from '../views/orphanagesView';
 
 export default {
-  async index(request: Request, response: Response) {
-    const orphanagesRepository = getRepository(Orphanage);
-
-    const orphanages = await orphanagesRepository.find({
-      relations: ['images'],
-      where: {
-        confirmed: true,
-      },
-    });
-
-    return response.status(200).json(orphanagesView.renderMany(orphanages));
-  },
-
   async indexConfirmed(request: Request, response: Response) {
     const orphanagesRepository = getRepository(Orphanage);
 

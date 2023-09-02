@@ -79,36 +79,6 @@ export default {
     });
   },
 
-  async destroy(request: Request, response: Response) {
-    const { id } = request.params;
-
-    const orphanagesRepository = getRepository(Orphanage);
-
-    const orphanageById = await orphanagesRepository.findOne({
-      relations: ['images'],
-      where: {
-        id,
-      },
-    });
-
-    if (!orphanageById) {
-      return response.status(400).json({
-        messagesError: ['Nenhum orfanato encontrado!'],
-      });
-    }
-
-    await orphanagesRepository
-      .createQueryBuilder()
-      .delete()
-      .where('id = :id')
-      .setParameters({
-        id,
-      })
-      .execute();
-
-    return response.status(200).json();
-  },
-
   async confirm(request: Request, response: Response) {
     const { id } = request.params;
 

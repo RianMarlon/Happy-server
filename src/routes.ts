@@ -7,9 +7,10 @@ import AuthController from './controllers/AuthController';
 import authenticate from './middlewares/auth';
 import authenticateAdmin from './middlewares/authAdmin';
 
-import CreateOrphanageController from './modules/orphanages/infra/http/controllers/create-orphanage-controller';
 import ShowOrphanageController from './modules/orphanages/infra/http/controllers/show-orphanage-controller';
+import CreateOrphanageController from './modules/orphanages/infra/http/controllers/create-orphanage-controller';
 import UpdateOrphanageController from './modules/orphanages/infra/http/controllers/update-orphanage-controller';
+import DeleteOrphanageController from './modules/orphanages/infra/http/controllers/delete-orphanage-controller';
 
 import uploadConfig from './config/upload';
 
@@ -17,6 +18,7 @@ const routes = Router();
 const upload = multer(uploadConfig);
 const createOrphanageController = new CreateOrphanageController();
 const updateOrphanageController = new UpdateOrphanageController();
+const deleteOrphanageController = new DeleteOrphanageController();
 const showOrphanageController = new ShowOrphanageController();
 
 routes.post('/signup', UsersController.create);
@@ -49,7 +51,7 @@ routes.put(
 routes.delete(
   '/orphanages/:id',
   authenticateAdmin,
-  OrphanagesController.destroy
+  deleteOrphanageController.handleRequest
 );
 
 routes.get(

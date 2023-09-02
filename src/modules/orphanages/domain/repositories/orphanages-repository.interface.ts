@@ -19,5 +19,6 @@ export interface IOrphanagesRepository {
     id: number,
     orphanageToUpdate: Partial<ICreateOrphanage>
   ): Promise<IOrphanage>;
+  confirm(id: number): Promise<void>;
   delete(id: number): Promise<void>;
 }

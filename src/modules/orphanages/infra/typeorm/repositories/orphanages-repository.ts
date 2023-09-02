@@ -79,6 +79,15 @@ class OrphanagesRepository implements IOrphanagesRepository {
     return orphanageUpdated;
   }
 
+  async confirm(id: number): Promise<void> {
+    const orphanageUpdated = this.repository.create({
+      id,
+      confirmed: true,
+    });
+
+    await this.repository.save(orphanageUpdated);
+  }
+
   async delete(id: number): Promise<void> {
     await this.repository.delete(id);
   }

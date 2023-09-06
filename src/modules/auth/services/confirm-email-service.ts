@@ -22,9 +22,7 @@ class ConfirmEmailService {
       throw new AppError('Usuário não encontrado!', 400);
     }
 
-    const userByVerifiedEmail = await this.usersRepository.findById(id);
-
-    if (userByVerifiedEmail?.verified_email) {
+    if (userByToken?.verified_email) {
       throw new AppError('Usuário já confirmou o e-mail!', 400);
     }
 

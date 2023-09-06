@@ -33,11 +33,7 @@ class SigninService {
       throw new AppError('E-mail ou senha inválido!', 400);
     }
 
-    const userHasVerifiedEmail = await this.usersRepository.findById(
-      userByEmail.id
-    );
-
-    if (!userHasVerifiedEmail?.verified_email) {
+    if (!userByEmail?.verified_email) {
       throw new AppError('Usuário não confirmou o e-mail!', 400);
     }
 

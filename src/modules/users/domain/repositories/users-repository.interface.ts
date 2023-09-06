@@ -5,5 +5,5 @@ export interface IUsersRepository {
   findByEmail(email: string): Promise<IUser | undefined>;
   findById(id: number): Promise<IUser | undefined>;
   create(userToCreate: ICreateUser): Promise<IUser>;
-  update(userToUpdate: IUser): Promise<void>;
+  update(id: number, userToUpdate: IUser): Promise<void>;
 }

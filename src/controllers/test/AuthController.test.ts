@@ -110,7 +110,7 @@ describe('AuthController Tests', () => {
       });
 
       expect(response.body).toEqual({
-        messagesError: ['E-mail não cadastrado!'],
+        messagesError: ['E-mail ou senha inválido!'],
       });
       expect(response.status).toBe(400);
     });
@@ -130,7 +130,7 @@ describe('AuthController Tests', () => {
       });
 
       expect(response.body).toEqual({
-        messagesError: ['Senha inválida!'],
+        messagesError: ['E-mail ou senha inválido!'],
       });
       expect(response.status).toBe(400);
     });

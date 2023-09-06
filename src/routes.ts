@@ -14,9 +14,12 @@ import UpdateOrphanageController from './modules/orphanages/infra/http/controlle
 import DeleteOrphanageController from './modules/orphanages/infra/http/controllers/delete-orphanage-controller';
 import ConfirmOrphanageController from './modules/orphanages/infra/http/controllers/confirm-orphanage-controller';
 
-import uploadConfig from './config/upload';
 import CreateUserController from './modules/users/infra/http/create-user-controller';
+
 import SigninController from './modules/auth/infra/http/signin-controller';
+import ConfirmEmailController from './modules/auth/infra/http/confirm-email-controller';
+
+import uploadConfig from './config/upload';
 
 const routes = Router();
 const upload = multer(uploadConfig);
@@ -35,10 +38,11 @@ const deleteOrphanageController = new DeleteOrphanageController();
 const createUserController = new CreateUserController();
 
 const signinController = new SigninController();
+const confirmEmailController = new ConfirmEmailController();
 
 routes.post('/signup', createUserController.handleRequest);
 routes.post('/signin', signinController.handleRequest);
-routes.put('/confirm-email', AuthController.confirmEmail);
+routes.put('/confirm-email', confirmEmailController.handleRequest);
 
 routes.post('/forgot-password', AuthController.forgotPassword);
 routes.put('/change-password', AuthController.changePassword);

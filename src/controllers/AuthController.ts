@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { getRepository } from 'typeorm';
-import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { resolve } from 'path';
 import * as Yup from 'yup';
@@ -151,47 +150,6 @@ export default {
 
     await usersRepository.update(id, {
       password: encryptPassword(password),
-    });
-
-    return response.status(204).json();
-  },
-
-  async confirmEmail(request: Request, response: Response) {
-    const { token } = request.body;
-
-    const usersRepository = getRepository(User);
-
-    const { id }: any = jwt.verify(
-      token,
-      process.env.AUTH_SECRET_CONFIRM_EMAIL as string
-    );
-
-    const userByToken = await usersRepository
-      .createQueryBuilder('user')
-      .where('user.id = :id')
-      .setParameters({
-        id,
-      })
-      .getOne();
-
-    if (!userByToken) {
-      throw new Yup.ValidationError('Usuário não encontrado!', null, '');
-    }
-
-    const userByVerifiedEmail = await usersRepository
-      .createQueryBuilder('user')
-      .where('user.id = :id AND user.verified_email = true')
-      .setParameters({
-        id,
-      })
-      .getOne();
-
-    if (userByVerifiedEmail) {
-      throw new Yup.ValidationError('Usuário já confirmou o e-mail!', null, '');
-    }
-
-    await usersRepository.update(id, {
-      verified_email: true,
     });
 
     return response.status(204).json();

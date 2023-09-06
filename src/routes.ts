@@ -21,6 +21,7 @@ import ConfirmEmailController from './modules/auth/infra/http/confirm-email-cont
 import ForgotPasswordController from './modules/auth/infra/http/forgot-password-controller';
 
 import uploadConfig from './config/upload';
+import ChangePasswordController from './modules/auth/infra/http/change-password-controller';
 
 const routes = Router();
 const upload = multer(uploadConfig);
@@ -41,13 +42,14 @@ const createUserController = new CreateUserController();
 const signinController = new SigninController();
 const confirmEmailController = new ConfirmEmailController();
 const forgotPasswordController = new ForgotPasswordController();
+const changePasswordController = new ChangePasswordController();
 
 routes.post('/signup', createUserController.handleRequest);
 routes.post('/signin', signinController.handleRequest);
 routes.put('/confirm-email', confirmEmailController.handleRequest);
 
 routes.post('/forgot-password', forgotPasswordController.handleRequest);
-routes.put('/change-password', AuthController.changePassword);
+routes.put('/change-password', changePasswordController.handleRequest);
 routes.post('/validate-token', AuthController.validateToken);
 
 routes.get(

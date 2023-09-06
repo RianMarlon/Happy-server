@@ -10,7 +10,6 @@ import {
 import { app } from '../../app';
 
 import User from '../../modules/users/infra/typeorm/entities/user';
-import SendMailService from '../../services/SendMailService';
 import MailtrapProvider from '../../shared/providers/mail/implementations/mailtrap-provider';
 
 describe('AuthController Tests', () => {
@@ -25,14 +24,13 @@ describe('AuthController Tests', () => {
   });
 
   afterAll(async () => {
-    jest
-      .spyOn(MailtrapProvider.prototype, 'send')
-      .mockImplementation(jest.fn());
     await connection.close();
   });
 
   beforeEach(async () => {
-    SendMailService.execute = jest.fn();
+    jest
+      .spyOn(MailtrapProvider.prototype, 'send')
+      .mockImplementation(jest.fn());
   });
 
   afterEach(async () => {
@@ -158,6 +156,10 @@ describe('AuthController Tests', () => {
 
   describe('/forgot-password', () => {
     it('should return status code 200', async () => {
+      const sendEmail = jest
+        .spyOn(MailtrapProvider.prototype, 'send')
+        .mockImplementation(jest.fn());
+
       await request(app).post('/signup').send({
         first_name: 'Teste',
         last_name: 'Teste',
@@ -180,14 +182,17 @@ describe('AuthController Tests', () => {
         email: 'teste@teste.com',
       });
 
-      expect(SendMailService.execute).toHaveBeenCalledTimes(1);
+      expect(sendEmail).toHaveBeenCalledTimes(2);
       expect(response.status).toBe(200);
     });
 
     it('should return internal error when not possible send the email', async () => {
-      SendMailService.execute = jest.fn().mockImplementationOnce(() => {
-        throw new Error();
-      });
+      const sendEmail = jest
+        .spyOn(MailtrapProvider.prototype, 'send')
+        .mockImplementationOnce(jest.fn())
+        .mockImplementationOnce(() => {
+          throw new Error();
+        });
 
       await request(app).post('/signup').send({
         first_name: 'Teste',
@@ -211,7 +216,7 @@ describe('AuthController Tests', () => {
         email: 'teste@teste.com',
       });
 
-      expect(SendMailService.execute).toHaveBeenCalledTimes(1);
+      expect(sendEmail).toHaveBeenCalledTimes(2);
       expect(response.body).toEqual({
         messagesError: ['Não foi possível enviar o e-mail!'],
       });

@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { getRepository } from 'typeorm';
 
-import User from '../models/User';
+import User from '../modules/users/infra/typeorm/entities/user';
 
 export default async function (
   request: Request,

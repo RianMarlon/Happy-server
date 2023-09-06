@@ -7,8 +7,9 @@ import {
 } from 'typeorm';
 import jwt from 'jsonwebtoken';
 
-import User from '../../models/User';
 import { app } from '../../app';
+
+import User from '../../modules/users/infra/typeorm/entities/user';
 
 describe('authAdmin Tests', () => {
   let connection: Connection;

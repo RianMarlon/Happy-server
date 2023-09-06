@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 import { resolve } from 'path';
 import * as Yup from 'yup';
 
-import User from '../models/User';
+import User from '../modules/users/infra/typeorm/entities/user';
 
 import SendMailService from '../services/SendMailService';
 

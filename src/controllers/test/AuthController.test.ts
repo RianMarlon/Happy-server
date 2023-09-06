@@ -8,9 +8,10 @@ import {
 } from 'typeorm';
 
 import { app } from '../../app';
-import User from '../../models/User';
 
+import User from '../../modules/users/infra/typeorm/entities/user';
 import SendMailService from '../../services/SendMailService';
+import MailtrapProvider from '../../shared/providers/mail/implementations/mailtrap-provider';
 
 describe('AuthController Tests', () => {
   let connection: Connection;
@@ -24,6 +25,9 @@ describe('AuthController Tests', () => {
   });
 
   afterAll(async () => {
+    jest
+      .spyOn(MailtrapProvider.prototype, 'send')
+      .mockImplementation(jest.fn());
     await connection.close();
   });
 
@@ -176,17 +180,14 @@ describe('AuthController Tests', () => {
         email: 'teste@teste.com',
       });
 
-      expect(SendMailService.execute).toHaveBeenCalledTimes(2);
+      expect(SendMailService.execute).toHaveBeenCalledTimes(1);
       expect(response.status).toBe(200);
     });
 
     it('should return internal error when not possible send the email', async () => {
-      SendMailService.execute = jest
-        .fn()
-        .mockImplementationOnce(jest.fn())
-        .mockImplementationOnce(() => {
-          throw new Error();
-        });
+      SendMailService.execute = jest.fn().mockImplementationOnce(() => {
+        throw new Error();
+      });
 
       await request(app).post('/signup').send({
         first_name: 'Teste',
@@ -210,7 +211,7 @@ describe('AuthController Tests', () => {
         email: 'teste@teste.com',
       });
 
-      expect(SendMailService.execute).toHaveBeenCalledTimes(2);
+      expect(SendMailService.execute).toHaveBeenCalledTimes(1);
       expect(response.body).toEqual({
         messagesError: ['Não foi possível enviar o e-mail!'],
       });

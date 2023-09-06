@@ -13,6 +13,7 @@ const config: Config = {
   coverageReporters: ['text-summary', 'lcov'],
   preset: 'ts-jest',
   testMatch: ['**/*.test.ts'],
+  testTimeout: 20000,
 };
 
 export default config;

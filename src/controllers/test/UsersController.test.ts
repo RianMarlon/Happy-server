@@ -7,11 +7,10 @@ import {
 } from 'typeorm';
 
 import { app } from '../../app';
-import User from '../../models/User';
+import User from '../../modules/users/infra/typeorm/entities/user';
+import MailtrapProvider from '../../shared/providers/mail/implementations/mailtrap-provider';
 
-import SendMailService from '../../services/SendMailService';
-
-describe('AuthController Tests', () => {
+describe('UsersController Tests', () => {
   let connection: Connection;
 
   beforeAll(async () => {
@@ -27,7 +26,9 @@ describe('AuthController Tests', () => {
   });
 
   beforeEach(async () => {
-    SendMailService.execute = jest.fn();
+    jest
+      .spyOn(MailtrapProvider.prototype, 'send')
+      .mockImplementation(jest.fn());
   });
 
   afterEach(async () => {
@@ -45,13 +46,15 @@ describe('AuthController Tests', () => {
         confirm_password: 'teste1234',
       });
 
-      expect(response.status).toBe(200);
+      expect(response.status).toBe(201);
     });
 
     it('should return internal error when not possible send the email', async () => {
-      SendMailService.execute = jest.fn().mockImplementationOnce(() => {
-        throw new Error();
-      });
+      jest
+        .spyOn(MailtrapProvider.prototype, 'send')
+        .mockImplementationOnce(() => {
+          throw new Error();
+        });
 
       const response = await request(app).post('/signup').send({
         first_name: 'Teste',

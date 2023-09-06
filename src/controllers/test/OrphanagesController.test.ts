@@ -7,13 +7,13 @@ import {
 } from 'typeorm';
 import path from 'path';
 
-import User from '../../models/User';
 import Orphanage from '../../modules/orphanages/infra/typeorm/entities/orphanage';
 import Image from '../../modules/images/infra/typeorm/entities/image';
 
 import { app } from '../../app';
 
-import SendMailService from '../../services/SendMailService';
+import MailtrapProvider from '../../shared/providers/mail/implementations/mailtrap-provider';
+import User from '../../modules/users/infra/typeorm/entities/user';
 
 interface IUserData {
   first_name: string;
@@ -44,8 +44,6 @@ async function createUserAndReturnAccessToken(
   });
   return response.body.token;
 }
-
-jest.useRealTimers();
 
 describe('OrphanagesController Tests', () => {
   let connection: Connection;
@@ -81,7 +79,9 @@ describe('OrphanagesController Tests', () => {
   });
 
   beforeEach(async () => {
-    SendMailService.execute = jest.fn();
+    jest
+      .spyOn(MailtrapProvider.prototype, 'send')
+      .mockImplementation(jest.fn());
     const imagesRepository = getRepository(Image);
     const orphanagesRepository = getRepository(Orphanage);
     await imagesRepository.clear();

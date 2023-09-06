@@ -1,7 +1,6 @@
 import { Router, Request, Response } from 'express';
 import multer from 'multer';
 
-import UsersController from './controllers/UsersController';
 import AuthController from './controllers/AuthController';
 import authenticate from './middlewares/auth';
 import authenticateAdmin from './middlewares/authAdmin';
@@ -16,6 +15,7 @@ import DeleteOrphanageController from './modules/orphanages/infra/http/controlle
 import ConfirmOrphanageController from './modules/orphanages/infra/http/controllers/confirm-orphanage-controller';
 
 import uploadConfig from './config/upload';
+import CreateUserController from './modules/users/infra/http/create-user-controller';
 
 const routes = Router();
 const upload = multer(uploadConfig);
@@ -31,7 +31,9 @@ const updateOrphanageController = new UpdateOrphanageController();
 const confirmOrphanageController = new ConfirmOrphanageController();
 const deleteOrphanageController = new DeleteOrphanageController();
 
-routes.post('/signup', UsersController.create);
+const createUserController = new CreateUserController();
+
+routes.post('/signup', createUserController.handleRequest);
 routes.post('/signin', AuthController.signin);
 routes.put('/confirm-email', AuthController.confirmEmail);
 

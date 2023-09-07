@@ -1,9 +1,10 @@
 import { Request, Response } from 'express';
 import * as Yup from 'yup';
-import BcryptHashProvider from '../../../../shared/providers/hash/implementations/bcrypt-hash-provider';
-import MailtrapProvider from '../../../../shared/providers/mail/implementations/mailtrap-provider';
-import CreateUserService from '../../services/create-user-service';
-import UsersRepository from '../typeorm/repositories/users-repository';
+
+import BcryptHashProvider from '../../../../../shared/providers/hash/implementations/bcrypt-hash-provider';
+import MailtrapProvider from '../../../../../shared/providers/mail/implementations/mailtrap-provider';
+import CreateUserService from '../../../services/create-user-service';
+import UsersRepository from '../../typeorm/repositories/users-repository';
 
 class CreateUserController {
   async handleRequest(request: Request, response: Response): Promise<Response> {

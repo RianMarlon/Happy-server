@@ -13,7 +13,7 @@ import UpdateOrphanageController from './modules/orphanages/infra/http/controlle
 import DeleteOrphanageController from './modules/orphanages/infra/http/controllers/delete-orphanage-controller';
 import ConfirmOrphanageController from './modules/orphanages/infra/http/controllers/confirm-orphanage-controller';
 
-import CreateUserController from './modules/users/infra/http/create-user-controller';
+import CreateUserController from './modules/users/infra/http/controllers/create-user-controller';
 
 import SigninController from './modules/auth/infra/http/controllers/signin-controller';
 import ConfirmEmailController from './modules/auth/infra/http/controllers/confirm-email-controller';

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
-import UsersRepository from '../../../users/infra/typeorm/repositories/users-repository';
-import ValidateTokenService from '../../services/validate-token-service';
+import UsersRepository from '../../../../users/infra/typeorm/repositories/users-repository';
+import ValidateTokenService from '../../../services/validate-token-service';
 
 class ValidateTokenController {
   async handleRequest(request: Request, response: Response): Promise<Response> {

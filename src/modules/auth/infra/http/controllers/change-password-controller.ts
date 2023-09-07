@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
 import * as Yup from 'yup';
 
-import UsersRepository from '../../../users/infra/typeorm/repositories/users-repository';
-import BcryptHashProvider from '../../../../shared/providers/hash/implementations/bcrypt-hash-provider';
+import UsersRepository from '../../../../users/infra/typeorm/repositories/users-repository';
+import BcryptHashProvider from '../../../../../shared/providers/hash/implementations/bcrypt-hash-provider';
 
-import ChangePasswordService from '../../services/change-password-service';
+import ChangePasswordService from '../../../services/change-password-service';
 
 class ChangePasswordController {
   async handleRequest(request: Request, response: Response): Promise<Response> {

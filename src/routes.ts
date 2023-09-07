@@ -15,13 +15,13 @@ import ConfirmOrphanageController from './modules/orphanages/infra/http/controll
 
 import CreateUserController from './modules/users/infra/http/create-user-controller';
 
-import SigninController from './modules/auth/infra/http/signin-controller';
-import ConfirmEmailController from './modules/auth/infra/http/confirm-email-controller';
-import ForgotPasswordController from './modules/auth/infra/http/forgot-password-controller';
+import SigninController from './modules/auth/infra/http/controllers/signin-controller';
+import ConfirmEmailController from './modules/auth/infra/http/controllers/confirm-email-controller';
+import ForgotPasswordController from './modules/auth/infra/http/controllers/forgot-password-controller';
+import ChangePasswordController from './modules/auth/infra/http/controllers/change-password-controller';
+import ValidateTokenController from './modules/auth/infra/http/controllers/validate-token-controller';
 
 import uploadConfig from './config/upload';
-import ChangePasswordController from './modules/auth/infra/http/change-password-controller';
-import ValidateTokenController from './modules/auth/infra/http/validate-token-controller';
 
 const routes = Router();
 const upload = multer(uploadConfig);

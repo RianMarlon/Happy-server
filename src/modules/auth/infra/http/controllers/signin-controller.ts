@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import * as Yup from 'yup';
 
-import UsersRepository from '../../../users/infra/typeorm/repositories/users-repository';
-import BcryptHashProvider from '../../../../shared/providers/hash/implementations/bcrypt-hash-provider';
-import SigninService from '../../services/signin-service';
+import UsersRepository from '../../../../users/infra/typeorm/repositories/users-repository';
+import BcryptHashProvider from '../../../../../shared/providers/hash/implementations/bcrypt-hash-provider';
+import SigninService from '../../../services/signin-service';
 
 class SigninController {
   async handleRequest(request: Request, response: Response): Promise<Response> {

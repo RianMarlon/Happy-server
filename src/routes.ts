@@ -1,7 +1,6 @@
 import { Router, Request, Response } from 'express';
 import multer from 'multer';
 
-import AuthController from './controllers/AuthController';
 import authenticate from './middlewares/auth';
 import authenticateAdmin from './middlewares/authAdmin';
 
@@ -22,6 +21,7 @@ import ForgotPasswordController from './modules/auth/infra/http/forgot-password-
 
 import uploadConfig from './config/upload';
 import ChangePasswordController from './modules/auth/infra/http/change-password-controller';
+import ValidateTokenController from './modules/auth/infra/http/validate-token-controller';
 
 const routes = Router();
 const upload = multer(uploadConfig);
@@ -43,6 +43,7 @@ const signinController = new SigninController();
 const confirmEmailController = new ConfirmEmailController();
 const forgotPasswordController = new ForgotPasswordController();
 const changePasswordController = new ChangePasswordController();
+const validateTokenController = new ValidateTokenController();
 
 routes.post('/signup', createUserController.handleRequest);
 routes.post('/signin', signinController.handleRequest);
@@ -50,7 +51,7 @@ routes.put('/confirm-email', confirmEmailController.handleRequest);
 
 routes.post('/forgot-password', forgotPasswordController.handleRequest);
 routes.put('/change-password', changePasswordController.handleRequest);
-routes.post('/validate-token', AuthController.validateToken);
+routes.post('/validate-token', validateTokenController.handleRequest);
 
 routes.get(
   '/orphanages',

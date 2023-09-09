@@ -39,7 +39,7 @@ class SigninService {
 
     const payload = {
       id: userByEmail.id,
-      admin: userByEmail.admin,
+      isAdmin: userByEmail.admin,
     };
 
     const token = this.jwtProvider.sign(

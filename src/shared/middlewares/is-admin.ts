@@ -1,8 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
-import { getRepository } from 'typeorm';
-
-import User from '../../modules/users/infra/typeorm/entities/user';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
 export default async function (
   request: Request,
@@ -17,8 +14,6 @@ export default async function (
     });
   }
 
-  const usersRepository = getRepository(User);
-
   const [scheme, token] = authHeader.split(' ');
 
   if (!token) {
@@ -27,21 +22,21 @@ export default async function (
     });
   }
 
-  const user: any = await jwt.verify(token, process.env.AUTH_SECRET as string);
+  const payload = jwt.verify(
+    token,
+    process.env.AUTH_SECRET as string
+  ) as JwtPayload;
 
-  const userById = await usersRepository
-    .createQueryBuilder('user')
-    .where('user.id = :id AND user.verified_email = true')
-    .setParameters({
-      id: user.id,
-    })
-    .getOne();
-
-  if (userById) {
-    return next();
-  } else {
+  if (!payload.isAdmin) {
     return response.status(401).json({
       messagesError: ['Acesso não autorizado!'],
     });
   }
+
+  request.user = {
+    id: payload.id as string,
+    isAdmin: payload.isAdmin as boolean,
+  };
+
+  return next();
 }

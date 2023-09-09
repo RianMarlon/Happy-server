@@ -5,13 +5,12 @@ import {
   Connection,
   getRepository,
 } from 'typeorm';
-import jwt from 'jsonwebtoken';
 
 import { app } from '../../../app';
 
 import User from '../../../modules/users/infra/typeorm/entities/user';
 
-describe('authAdmin Tests', () => {
+describe('isAutheticated Tests', () => {
   let connection: Connection;
   let accessToken: string;
 
@@ -35,7 +34,6 @@ describe('authAdmin Tests', () => {
       },
       {
         verified_email: true,
-        admin: true,
       }
     );
     const response = await request(app).post('/signin').send({
@@ -53,14 +51,14 @@ describe('authAdmin Tests', () => {
 
   it('should call the next function when the user is authorized', async () => {
     const response = await request(app)
-      .get('/orphanages-pending')
+      .get('/orphanages')
       .set({ Authorization: `Basic ${accessToken}` });
 
     expect(response.status).toBe(200);
   });
 
   it('should return an error when the token is not informed', async () => {
-    const response = await request(app).get('/orphanages-pending');
+    const response = await request(app).get('/orphanages');
 
     expect(response.body).toEqual({
       messagesError: ['Acesso não autorizado!'],
@@ -70,23 +68,8 @@ describe('authAdmin Tests', () => {
 
   it('should return an error when the token is invalid', async () => {
     const response = await request(app)
-      .get('/orphanages-pending')
+      .get('/orphanages')
       .set({ Authorization: 'Basic ' });
-
-    expect(response.body).toEqual({
-      messagesError: ['Acesso não autorizado!'],
-    });
-    expect(response.status).toBe(401);
-  });
-
-  it('should return an error when the user of token not exists', async () => {
-    const token = jwt.sign({ id: 3 }, process.env.AUTH_SECRET as string, {
-      expiresIn: '30m',
-    });
-
-    const response = await request(app)
-      .get('/orphanages-pending')
-      .set({ Authorization: `Basic ${token}` });
 
     expect(response.body).toEqual({
       messagesError: ['Acesso não autorizado!'],

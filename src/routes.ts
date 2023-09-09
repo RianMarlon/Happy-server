@@ -1,8 +1,8 @@
 import { Router, Request, Response } from 'express';
 import multer from 'multer';
 
-import authenticate from './shared/middlewares/auth';
-import authenticateAdmin from './shared/middlewares/authAdmin';
+import isAuthenticated from './shared/middlewares/is-authenticated';
+import isAdmin from './shared/middlewares/is-admin';
 
 import FindAllOrphanagesController from './modules/orphanages/infra/http/controllers/find-all-orphanages-controller';
 import FindAllOrphanagesConfirmedController from './modules/orphanages/infra/http/controllers/find-all-orphanages-confirmed-controller';
@@ -55,47 +55,47 @@ routes.post('/validate-token', validateTokenController.handleRequest);
 
 routes.get(
   '/orphanages',
-  authenticate,
+  isAuthenticated,
   findAllOrphanagesController.handleRequest
 );
 routes.post(
   '/orphanages',
-  authenticate,
+  isAuthenticated,
   upload.array('images'),
   createOrphanageController.handleRequest
 );
 routes.get(
   '/orphanages/:id',
-  authenticate,
+  isAuthenticated,
   showOrphanageController.handleRequest
 );
 
 routes.put(
   '/orphanages/:id',
-  authenticateAdmin,
+  isAdmin,
   upload.array('images'),
   updateOrphanageController.handleRequest
 );
 routes.delete(
   '/orphanages/:id',
-  authenticateAdmin,
+  isAdmin,
   deleteOrphanageController.handleRequest
 );
 
 routes.get(
   '/orphanages-confirmed',
-  authenticateAdmin,
+  isAdmin,
   findAllOrphanagesConfirmedController.handleRequest
 );
 routes.get(
   '/orphanages-pending',
-  authenticateAdmin,
+  isAdmin,
   findAllOrphanagesPendingController.handleRequest
 );
 
 routes.put(
   '/orphanages/:id/confirm',
-  authenticateAdmin,
+  isAdmin,
   confirmOrphanageController.handleRequest
 );
 

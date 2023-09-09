@@ -1,4 +1,4 @@
-import Orphanage from '../modules/orphanages/infra/typeorm/entities/orphanage';
+import Orphanage from '../../modules/orphanages/infra/typeorm/entities/orphanage';
 import imageView from './imagesView';
 import convertMinutesToTime from '../utils/convertMinutesToTime';
 

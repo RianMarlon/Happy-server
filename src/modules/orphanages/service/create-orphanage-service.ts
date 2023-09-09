@@ -1,5 +1,5 @@
 import AppError from '../../../shared/errors/app-error';
-import convertHourToMinute from '../../../utils/convertHourToMinute';
+import convertHourToMinute from '../../../shared/utils/convertHourToMinute';
 
 import { IOrphanagesRepository } from '../domain/repositories/orphanages-repository.interface';
 

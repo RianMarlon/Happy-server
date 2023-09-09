@@ -1,4 +1,4 @@
-import Image from '../../modules/images/infra/typeorm/entities/image';
+import Image from '../../../modules/images/infra/typeorm/entities/image';
 import imagesView from '../imagesView';
 
 describe('imagesView Tests', () => {

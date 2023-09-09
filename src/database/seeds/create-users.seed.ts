@@ -1,9 +1,9 @@
 import { Connection } from 'typeorm';
 import { Factory, Seeder } from 'typeorm-seeding';
 
-import User from '../../models/User';
+import User from '../../modules/users/infra/typeorm/entities/user';
 
-import encryptPassword from '../../utils/encryptPassword';
+import encryptPassword from '../../shared/utils/encryptPassword';
 
 export default class CreateUsers implements Seeder {
   public async run(factory: Factory, connection: Connection): Promise<any> {

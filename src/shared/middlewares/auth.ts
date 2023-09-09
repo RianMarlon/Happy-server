@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { getRepository } from 'typeorm';
 
-import User from '../modules/users/infra/typeorm/entities/user';
+import User from '../../modules/users/infra/typeorm/entities/user';
 
 export default async function (
   request: Request,
@@ -31,7 +31,7 @@ export default async function (
 
   const userById = await usersRepository
     .createQueryBuilder('user')
-    .where('user.id = :id AND user.verified_email = true AND user.admin = true')
+    .where('user.id = :id AND user.verified_email = true')
     .setParameters({
       id: user.id,
     })

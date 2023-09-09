@@ -1,8 +1,8 @@
 import { Router, Request, Response } from 'express';
 import multer from 'multer';
 
-import authenticate from './middlewares/auth';
-import authenticateAdmin from './middlewares/authAdmin';
+import authenticate from './shared/middlewares/auth';
+import authenticateAdmin from './shared/middlewares/authAdmin';
 
 import FindAllOrphanagesController from './modules/orphanages/infra/http/controllers/find-all-orphanages-controller';
 import FindAllOrphanagesConfirmedController from './modules/orphanages/infra/http/controllers/find-all-orphanages-confirmed-controller';

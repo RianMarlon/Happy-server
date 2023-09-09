@@ -1,6 +1,6 @@
 import AppError from '../../../shared/errors/app-error';
-import convertHourToMinute from '../../../utils/convertHourToMinute';
-import removeImages from '../../../utils/removeImages';
+import convertHourToMinute from '../../../shared/utils/convertHourToMinute';
+import removeImages from '../../../shared/utils/removeImages';
 import { IImage } from '../../images/domain/models/image.interface';
 import CreateImagesService from '../../images/services/create-images-service';
 

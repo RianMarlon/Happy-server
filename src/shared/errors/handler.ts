@@ -1,7 +1,7 @@
 import { ErrorRequestHandler } from 'express';
 import { TokenExpiredError } from 'jsonwebtoken';
 import { ValidationError } from 'yup';
-import removeImages from '../../utils/removeImages';
+import removeImages from '../utils/removeImages';
 import AppError from './app-error';
 
 const errorHandler: ErrorRequestHandler = (error, request, response, next) => {

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-import orphanagesView from '../../../../../views/orphanagesView';
+import orphanagesView from '../../../../../shared/views/orphanagesView';
 import FindAllOrphanagesPaginatedService from '../../../service/find-all-orphanages-paginated-service';
 
 import OrphanagesRepository from '../../typeorm/repositories/orphanages-repository';

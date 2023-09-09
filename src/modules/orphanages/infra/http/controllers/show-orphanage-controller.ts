@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-import orphanagesView from '../../../../../views/orphanagesView';
+import orphanagesView from '../../../../../shared/views/orphanagesView';
 import ShowOrphanageService from '../../../service/show-orphanage-service';
 import OrphanagesRepository from '../../typeorm/repositories/orphanages-repository';
 

@@ -4,8 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "node dist/server.js",
-    "dev": "tsnd --transpile-only --ignore-watch node_modules src/server.ts",
+    "start": "node dist/shared/infra/http/server.js",
+    "dev": "tsnd --transpile-only --ignore-watch node_modules src/shared/infra/http/server.ts",
     "build": "tsc",
     "typeorm": "ts-node-dev ./node_modules/typeorm/cli.js",
     "seed:config": "ts-node-dev ./node_modules/typeorm-seeding/dist/cli.js config",

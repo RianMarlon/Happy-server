@@ -1,27 +1,27 @@
 import { Router, Request, Response } from 'express';
 import multer from 'multer';
 
-import isAuthenticated from './shared/middlewares/is-authenticated';
-import isAdmin from './shared/middlewares/is-admin';
+import isAuthenticated from './middlewares/is-authenticated';
+import isAdmin from './middlewares/is-admin';
 
-import FindAllOrphanagesController from './modules/orphanages/infra/http/controllers/find-all-orphanages-controller';
-import FindAllOrphanagesConfirmedController from './modules/orphanages/infra/http/controllers/find-all-orphanages-confirmed-controller';
-import FindAllOrphanagesPendingController from './modules/orphanages/infra/http/controllers/find-all-orphanages-pending-controller';
-import ShowOrphanageController from './modules/orphanages/infra/http/controllers/show-orphanage-controller';
-import CreateOrphanageController from './modules/orphanages/infra/http/controllers/create-orphanage-controller';
-import UpdateOrphanageController from './modules/orphanages/infra/http/controllers/update-orphanage-controller';
-import DeleteOrphanageController from './modules/orphanages/infra/http/controllers/delete-orphanage-controller';
-import ConfirmOrphanageController from './modules/orphanages/infra/http/controllers/confirm-orphanage-controller';
+import FindAllOrphanagesController from '../../../modules/orphanages/infra/http/controllers/find-all-orphanages-controller';
+import FindAllOrphanagesConfirmedController from '../../../modules/orphanages/infra/http/controllers/find-all-orphanages-confirmed-controller';
+import FindAllOrphanagesPendingController from '../../../modules/orphanages/infra/http/controllers/find-all-orphanages-pending-controller';
+import ShowOrphanageController from '../../../modules/orphanages/infra/http/controllers/show-orphanage-controller';
+import CreateOrphanageController from '../../../modules/orphanages/infra/http/controllers/create-orphanage-controller';
+import UpdateOrphanageController from '../../../modules/orphanages/infra/http/controllers/update-orphanage-controller';
+import DeleteOrphanageController from '../../../modules/orphanages/infra/http/controllers/delete-orphanage-controller';
+import ConfirmOrphanageController from '../../../modules/orphanages/infra/http/controllers/confirm-orphanage-controller';
 
-import CreateUserController from './modules/users/infra/http/controllers/create-user-controller';
+import CreateUserController from '../../../modules/users/infra/http/controllers/create-user-controller';
 
-import SigninController from './modules/auth/infra/http/controllers/signin-controller';
-import ConfirmEmailController from './modules/auth/infra/http/controllers/confirm-email-controller';
-import ForgotPasswordController from './modules/auth/infra/http/controllers/forgot-password-controller';
-import ChangePasswordController from './modules/auth/infra/http/controllers/change-password-controller';
-import ValidateTokenController from './modules/auth/infra/http/controllers/validate-token-controller';
+import SigninController from '../../../modules/auth/infra/http/controllers/signin-controller';
+import ConfirmEmailController from '../../../modules/auth/infra/http/controllers/confirm-email-controller';
+import ForgotPasswordController from '../../../modules/auth/infra/http/controllers/forgot-password-controller';
+import ChangePasswordController from '../../../modules/auth/infra/http/controllers/change-password-controller';
+import ValidateTokenController from '../../../modules/auth/infra/http/controllers/validate-token-controller';
 
-import uploadConfig from './config/upload';
+import uploadConfig from '../../../config/upload';
 
 const routes = Router();
 const upload = multer(uploadConfig);

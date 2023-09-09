@@ -6,13 +6,9 @@ import {
   getRepository,
 } from 'typeorm';
 
-import { app } from '../../../../../../shared/infra/http/app';
+import { app } from '../../app';
 
-import User from '../../../../../users/infra/typeorm/entities/user';
-import Image from '../../../../../images/infra/typeorm/entities/image';
-import Orphanage from '../../../typeorm/entities/orphanage';
-
-import MailtrapProvider from '../../../../../../shared/providers/mail/implementations/mailtrap-provider';
+import User from '../../../../../modules/users/infra/typeorm/entities/user';
 
 interface IUserData {
   first_name: string;
@@ -44,9 +40,10 @@ async function createUserAndReturnAccessToken(
   return response.body.token;
 }
 
-describe('ConfirmOrphanageController Tests', () => {
+describe('isAdmin Tests', () => {
   let connection: Connection;
   let accessTokenAdmin: string;
+  let accessTokenUser: string;
 
   beforeAll(async () => {
     const connectionOptions = await getConnectionOptions('test');
@@ -64,16 +61,16 @@ describe('ConfirmOrphanageController Tests', () => {
       },
       true
     );
-  });
-
-  beforeEach(async () => {
-    jest
-      .spyOn(MailtrapProvider.prototype, 'send')
-      .mockImplementation(jest.fn());
-    const imagesRepository = getRepository(Image);
-    const orphanagesRepository = getRepository(Orphanage);
-    await imagesRepository.clear();
-    await orphanagesRepository.clear();
+    accessTokenUser = await createUserAndReturnAccessToken(
+      {
+        first_name: 'Teste 2',
+        last_name: 'Teste 2',
+        email: 'teste2@teste.com',
+        password: 'teste1234',
+        confirm_password: 'teste1234',
+      },
+      false
+    );
   });
 
   afterAll(async () => {
@@ -82,38 +79,42 @@ describe('ConfirmOrphanageController Tests', () => {
     await connection.close();
   });
 
-  it('should confirm a orphanage pending by id', async () => {
-    const orphanagesRepository = getRepository(Orphanage);
-    await orphanagesRepository.insert([
-      {
-        id: 1,
-        name: 'Teste',
-        latitude: -5.101444,
-        longitude: -38.369682,
-        about: 'Teste',
-        whatsapp: '9999999999',
-        instructions: 'Teste',
-        open_from: 1020,
-        open_until: 1140,
-        open_on_weekends: true,
-        confirmed: false,
-      },
-    ]);
+  it('should call the next function when the user is authorized', async () => {
     const response = await request(app)
-      .put('/orphanages/1/confirm')
+      .get('/orphanages-pending')
       .set({ Authorization: `Basic ${accessTokenAdmin}` });
 
     expect(response.status).toBe(200);
   });
 
-  it('should return an error when the orphanage not exists', async () => {
-    const response = await request(app)
-      .put('/orphanages/1/confirm')
-      .set({ Authorization: `Basic ${accessTokenAdmin}` });
+  it('should return an error when the token is not informed', async () => {
+    const response = await request(app).get('/orphanages-pending');
 
     expect(response.body).toEqual({
-      messagesError: ['Nenhum orfanato encontrado!'],
+      messagesError: ['Acesso não autorizado!'],
     });
-    expect(response.status).toBe(404);
+    expect(response.status).toBe(401);
+  });
+
+  it('should return an error when the token is invalid', async () => {
+    const response = await request(app)
+      .get('/orphanages-pending')
+      .set({ Authorization: 'Basic ' });
+
+    expect(response.body).toEqual({
+      messagesError: ['Acesso não autorizado!'],
+    });
+    expect(response.status).toBe(401);
+  });
+
+  it('should return an error when the user is not admin', async () => {
+    const response = await request(app)
+      .get('/orphanages-pending')
+      .set({ Authorization: `Basic ${accessTokenUser}` });
+
+    expect(response.body).toEqual({
+      messagesError: ['Acesso não autorizado!'],
+    });
+    expect(response.status).toBe(401);
   });
 });

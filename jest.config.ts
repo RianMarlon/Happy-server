@@ -7,8 +7,10 @@ const config: Config = {
   coverageProvider: 'v8',
   collectCoverageFrom: [
     '<rootDir>/src/**/**.ts',
-    '!<rootDir>/src/modules/**/domain/**/**.ts',
-    '!<rootDir>/src/database/**/**.ts',
+    '!<rootDir>/src/@types/**/**.ts',
+    '!<rootDir>/src/**/domain/**/**.ts',
+    '!<rootDir>/src/**/models/**/**.ts',
+    '!<rootDir>/src/shared/infra/typeorm/**/**.ts',
   ],
   coverageReporters: ['text-summary', 'lcov'],
   preset: 'ts-jest',

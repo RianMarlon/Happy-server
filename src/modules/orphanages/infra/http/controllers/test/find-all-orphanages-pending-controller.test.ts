@@ -6,7 +6,7 @@ import {
   getRepository,
 } from 'typeorm';
 
-import { app } from '../../../../../../app';
+import { app } from '../../../../../../shared/infra/http/app';
 
 import User from '../../../../../users/infra/typeorm/entities/user';
 import Image from '../../../../../images/infra/typeorm/entities/image';

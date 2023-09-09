@@ -4,9 +4,9 @@ import 'express-async-errors';
 import cors from 'cors';
 import 'dotenv/config';
 
-import './database/connection';
+import '../typeorm/connection';
 import routes from './routes';
-import errorHandler from './shared/errors/handler';
+import errorHandler from '../../errors/handler';
 
 const app = express();
 

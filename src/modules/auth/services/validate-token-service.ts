@@ -1,6 +1,6 @@
-import jwt from 'jsonwebtoken';
-
 import AppError from '../../../shared/errors/app-error';
+
+import { IJwtProvider } from '../../../shared/providers/jwt/models/jwt-provider.interface';
 import { IUsersRepository } from '../../users/domain/repositories/users-repository.interface';
 
 interface IRequest {
@@ -12,14 +12,20 @@ interface IResponse {
 }
 
 class ValidateTokenService {
-  constructor(private usersRepository: IUsersRepository) {}
+  constructor(
+    private usersRepository: IUsersRepository,
+    private jwtProvider: IJwtProvider
+  ) {}
 
   async execute({ token }: IRequest): Promise<IResponse> {
     if (!token) {
       throw new AppError('Token não informado!', 400);
     }
 
-    const { id }: any = jwt.verify(token, process.env.AUTH_SECRET as string);
+    const { id }: any = this.jwtProvider.verify(
+      token,
+      process.env.AUTH_SECRET as string
+    );
 
     const userById = await this.usersRepository.findById(id);
 

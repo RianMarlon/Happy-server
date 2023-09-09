@@ -1,8 +1,7 @@
-import jwt from 'jsonwebtoken';
-
 import AppError from '../../../shared/errors/app-error';
-import { IHashProvider } from '../../../shared/providers/hash/models/hash-provider.interface';
 
+import { IHashProvider } from '../../../shared/providers/hash/models/hash-provider.interface';
+import { IJwtProvider } from '../../../shared/providers/jwt/models/jwt-provider.interface';
 import { IUsersRepository } from '../../users/domain/repositories/users-repository.interface';
 
 interface IRequest {
@@ -14,7 +13,8 @@ interface IRequest {
 class SigninService {
   constructor(
     private usersRepository: IUsersRepository,
-    private hashProvider: IHashProvider
+    private hashProvider: IHashProvider,
+    private jwtProvider: IJwtProvider
   ) {}
 
   async execute({ email, password, remember_me }: IRequest): Promise<string> {
@@ -42,9 +42,13 @@ class SigninService {
       admin: userByEmail.admin,
     };
 
-    const token = jwt.sign({ ...payload }, process.env.AUTH_SECRET as string, {
-      expiresIn: remember_me ? '14d' : '1d',
-    });
+    const token = this.jwtProvider.sign(
+      { ...payload },
+      process.env.AUTH_SECRET as string,
+      {
+        expiresIn: remember_me ? '14d' : '1d',
+      }
+    );
 
     return token;
   }

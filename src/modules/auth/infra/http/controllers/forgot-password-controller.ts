@@ -1,7 +1,11 @@
 import { Request, Response } from 'express';
-import MailtrapProvider from '../../../../../shared/providers/mail/implementations/mailtrap-provider';
+
 import UsersRepository from '../../../../users/infra/typeorm/repositories/users-repository';
+
 import ForgotPasswordService from '../../../services/forgot-password-service';
+
+import JsonWebTokenProvider from '../../../../../shared/providers/jwt/implementations/jsonwebtoken-provider';
+import MailtrapProvider from '../../../../../shared/providers/mail/implementations/mailtrap-provider';
 
 class ForgotPasswordController {
   async handleRequest(request: Request, response: Response): Promise<Response> {
@@ -9,9 +13,11 @@ class ForgotPasswordController {
 
     const usersRepository = new UsersRepository();
     const mailtrapProvider = new MailtrapProvider();
+    const jsonWebTokenProvider = new JsonWebTokenProvider();
     const forgotPasswordService = new ForgotPasswordService(
       usersRepository,
-      mailtrapProvider
+      mailtrapProvider,
+      jsonWebTokenProvider
     );
     await forgotPasswordService.execute({ email });
 

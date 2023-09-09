@@ -1,9 +1,10 @@
 import { resolve } from 'path';
-import jwt from 'jsonwebtoken';
 
 import AppError from '../../../shared/errors/app-error';
+
 import { IUsersRepository } from '../../users/domain/repositories/users-repository.interface';
 import { IMailProvider } from '../../../shared/providers/mail/models/mail-provider.interface';
+import { IJwtProvider } from '../../../shared/providers/jwt/models/jwt-provider.interface';
 
 interface IRequest {
   email: string;
@@ -12,7 +13,8 @@ interface IRequest {
 class ForgotPasswordService {
   constructor(
     private usersRepository: IUsersRepository,
-    private mailProvider: IMailProvider
+    private mailProvider: IMailProvider,
+    private jwtProvider: IJwtProvider
   ) {}
 
   async execute({ email }: IRequest): Promise<void> {
@@ -32,9 +34,13 @@ class ForgotPasswordService {
       id: userByEmail.id,
     };
 
-    const token = jwt.sign({ ...payload }, process.env.AUTH_SECRET as string, {
-      expiresIn: '30m',
-    });
+    const token = this.jwtProvider.sign(
+      { ...payload },
+      process.env.AUTH_SECRET as string,
+      {
+        expiresIn: '30m',
+      }
+    );
 
     const mailPath = resolve('./src/templates/emails/auth/forgotPassword.hbs');
 

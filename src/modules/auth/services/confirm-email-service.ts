@@ -1,6 +1,6 @@
-import jwt from 'jsonwebtoken';
 import AppError from '../../../shared/errors/app-error';
 
+import { IJwtProvider } from '../../../shared/providers/jwt/models/jwt-provider.interface';
 import { IUsersRepository } from '../../users/domain/repositories/users-repository.interface';
 
 interface IRequest {
@@ -8,10 +8,13 @@ interface IRequest {
 }
 
 class ConfirmEmailService {
-  constructor(private usersRepository: IUsersRepository) {}
+  constructor(
+    private usersRepository: IUsersRepository,
+    private jwtProvider: IJwtProvider
+  ) {}
 
   async execute({ token }: IRequest): Promise<void> {
-    const { id }: any = jwt.verify(
+    const { id }: any = this.jwtProvider.verify(
       token,
       process.env.AUTH_SECRET_CONFIRM_EMAIL as string
     );

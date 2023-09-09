@@ -1,8 +1,7 @@
-import jwt from 'jsonwebtoken';
-
 import AppError from '../../../shared/errors/app-error';
 
 import { IHashProvider } from '../../../shared/providers/hash/models/hash-provider.interface';
+import { IJwtProvider } from '../../../shared/providers/jwt/models/jwt-provider.interface';
 import { IUsersRepository } from '../../users/domain/repositories/users-repository.interface';
 
 interface IRequest {
@@ -13,11 +12,15 @@ interface IRequest {
 class ChangePasswordService {
   constructor(
     private usersRepository: IUsersRepository,
-    private hashProvider: IHashProvider
+    private hashProvider: IHashProvider,
+    private jwtProvider: IJwtProvider
   ) {}
 
   async execute({ token, password }: IRequest): Promise<void> {
-    const { id }: any = jwt.verify(token, process.env.AUTH_SECRET as string);
+    const { id }: any = this.jwtProvider.verify(
+      token,
+      process.env.AUTH_SECRET as string
+    );
 
     const userById = await this.usersRepository.findById(id);
 

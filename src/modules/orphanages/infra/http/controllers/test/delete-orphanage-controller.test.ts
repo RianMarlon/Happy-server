@@ -66,10 +66,13 @@ describe('DeleteOrphanageController Tests', () => {
     );
   });
 
-  beforeEach(async () => {
+  beforeEach(() => {
     jest
       .spyOn(MailtrapProvider.prototype, 'send')
       .mockImplementation(jest.fn());
+  });
+
+  afterEach(async () => {
     const imagesRepository = getRepository(Image);
     const orphanagesRepository = getRepository(Orphanage);
     await imagesRepository.clear();

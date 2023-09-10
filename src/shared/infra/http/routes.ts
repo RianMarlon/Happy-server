@@ -24,7 +24,7 @@ import ValidateTokenController from '../../../modules/auth/infra/http/controller
 import uploadConfig from '../../../config/upload';
 
 const routes = Router();
-const upload = multer(uploadConfig);
+const upload = multer(uploadConfig.multer);
 
 const findAllOrphanagesController = new FindAllOrphanagesController();
 const findAllOrphanagesConfirmedController =

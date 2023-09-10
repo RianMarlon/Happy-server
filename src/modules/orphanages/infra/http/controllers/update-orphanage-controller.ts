@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import * as Yup from 'yup';
+import DiskStorageProvider from '../../../../../shared/providers/file-storage/implementations/disk-storage-provider';
 import ImagesRepository from '../../../../images/infra/typeorm/repositories/images-repository';
 import CreateImagesService from '../../../../images/services/create-images-service';
 import DeleteImagesByOrphanageService from '../../../../images/services/delete-images-by-orphanage-service';
@@ -90,10 +91,12 @@ class UpdateOrphanageController {
     const deleteImagesByOrphanageService = new DeleteImagesByOrphanageService(
       imagesRepository
     );
+    const diskStorageProvider = new DiskStorageProvider();
     const updateOrphanageService = new UpdateOrphanageService(
       orphanagesRepository,
       createImagesService,
-      deleteImagesByOrphanageService
+      deleteImagesByOrphanageService,
+      diskStorageProvider
     );
     await updateOrphanageService.execute(Number(id), data);
 

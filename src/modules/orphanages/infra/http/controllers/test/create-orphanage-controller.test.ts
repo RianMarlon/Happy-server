@@ -14,6 +14,7 @@ import Image from '../../../../../images/infra/typeorm/entities/image';
 import Orphanage from '../../../typeorm/entities/orphanage';
 
 import MailtrapProvider from '../../../../../../shared/providers/mail/implementations/mailtrap-provider';
+import DiskStorageProvider from '../../../../../../shared/providers/file-storage/implementations/disk-storage-provider';
 
 interface IUserData {
   first_name: string;
@@ -67,12 +68,26 @@ describe('CreateOrphanageController Tests', () => {
     );
   });
 
-  beforeEach(async () => {
+  beforeEach(() => {
     jest
       .spyOn(MailtrapProvider.prototype, 'send')
       .mockImplementation(jest.fn());
+  });
+
+  afterEach(async () => {
     const imagesRepository = getRepository(Image);
     const orphanagesRepository = getRepository(Orphanage);
+    const orphanages = await orphanagesRepository.find({
+      relations: ['images'],
+    });
+    const diskStorageProvider = new DiskStorageProvider();
+    for (const orphanage of orphanages) {
+      if (orphanage.images) {
+        for (const image of orphanage.images) {
+          await diskStorageProvider.delete(image.path);
+        }
+      }
+    }
     await imagesRepository.clear();
     await orphanagesRepository.clear();
   });

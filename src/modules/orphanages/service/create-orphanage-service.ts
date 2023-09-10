@@ -2,6 +2,7 @@ import AppError from '../../../shared/errors/app-error';
 import convertHourToMinute from '../../../shared/utils/convertHourToMinute';
 
 import { IOrphanagesRepository } from '../domain/repositories/orphanages-repository.interface';
+import { IFileStorageProvider } from '../../../shared/providers/file-storage/models/file-storage-provider.interface';
 
 interface IRequest {
   name: string;
@@ -19,7 +20,10 @@ interface IRequest {
 }
 
 class CreateOrphanageService {
-  constructor(private orphanagesRepository: IOrphanagesRepository) {}
+  constructor(
+    private orphanagesRepository: IOrphanagesRepository,
+    private fileStorageProvider: IFileStorageProvider
+  ) {}
 
   async execute(data: IRequest): Promise<void> {
     const newOrphanage = {
@@ -50,6 +54,9 @@ class CreateOrphanageService {
     }
 
     await this.orphanagesRepository.create(newOrphanage);
+    for (const image of data.images) {
+      await this.fileStorageProvider.save(image.path);
+    }
   }
 }
 

@@ -24,7 +24,9 @@ yarn-error.log*
 
 # folder uploads
 /uploads/*
+/temp/*
 !uploads/.gitkeep
+!temp/.gitkeep
 
 # env files
 .env

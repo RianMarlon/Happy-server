@@ -1,4 +1,5 @@
 import AppError from '../../../shared/errors/app-error';
+import { IFileStorageProvider } from '../../../shared/providers/file-storage/models/file-storage-provider.interface';
 import convertHourToMinute from '../../../shared/utils/convertHourToMinute';
 import removeImages from '../../../shared/utils/removeImages';
 import { IImage } from '../../images/domain/models/image.interface';
@@ -27,7 +28,8 @@ class UpdateOrphanageService {
   constructor(
     private orphanagesRepository: IOrphanagesRepository,
     private createImagesService: CreateImagesService,
-    private deleteImagesByOrphanageService: DeleteImagesByOrphanageService
+    private deleteImagesByOrphanageService: DeleteImagesByOrphanageService,
+    private fileStorageProvider: IFileStorageProvider
   ) {}
 
   async execute(id: number, data: IRequest): Promise<void> {
@@ -69,11 +71,10 @@ class UpdateOrphanageService {
     });
 
     if (data.images.length > 0) {
-      const imagesOld = orphanageById.images;
-      const filenamesOld = imagesOld.map((image) => image.path);
-
-      removeImages('/uploads', filenamesOld);
       await this.deleteImagesByOrphanageService.execute(orphanageById.id);
+      for (const image of orphanageById.images) {
+        await this.fileStorageProvider.delete(image.path);
+      }
 
       const newImages = data.images.map((image) => {
         const newImage = {} as IImage;
@@ -84,6 +85,9 @@ class UpdateOrphanageService {
       });
 
       await this.createImagesService.execute(newImages);
+      for (const image of orphanageById.images) {
+        await this.fileStorageProvider.save(image.path);
+      }
     }
   }
 }

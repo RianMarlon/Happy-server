@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import * as Yup from 'yup';
+import DiskStorageProvider from '../../../../../shared/providers/file-storage/implementations/disk-storage-provider';
 import CreateOrphanageService from '../../../service/create-orphanage-service';
 import OrphanagesRepository from '../../typeorm/repositories/orphanages-repository';
 
@@ -80,8 +81,10 @@ class CreateOrphanageController {
     });
 
     const orphanagesRepository = new OrphanagesRepository();
+    const diskStorageProvider = new DiskStorageProvider();
     const createOrphanageService = new CreateOrphanageService(
-      orphanagesRepository
+      orphanagesRepository,
+      diskStorageProvider
     );
     await createOrphanageService.execute({
       ...data,

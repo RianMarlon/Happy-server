@@ -1,13 +1,13 @@
 import AppError from '../../../shared/errors/app-error';
-import { IFileStorageProvider } from '../../../shared/providers/file-storage/models/file-storage-provider.interface';
+
 import convertHourToMinute from '../../../shared/utils/convertHourToMinute';
-import removeImages from '../../../shared/utils/removeImages';
+
+import { IFileStorageProvider } from '../../../shared/providers/file-storage/models/file-storage-provider.interface';
 import { IImage } from '../../images/domain/models/image.interface';
-import CreateImagesService from '../../images/services/create-images-service';
-
-import DeleteImagesByOrphanageService from '../../images/services/delete-images-by-orphanage-service';
-
 import { IOrphanagesRepository } from '../domain/repositories/orphanages-repository.interface';
+
+import CreateImagesService from '../../images/services/create-images-service';
+import DeleteImagesByOrphanageService from '../../images/services/delete-images-by-orphanage-service';
 
 interface IRequest {
   name: string;

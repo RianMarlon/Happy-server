@@ -1,3 +1,5 @@
+import { injectable, inject } from 'tsyringe';
+
 import AppError from '../../../shared/errors/app-error';
 
 import { IHashProvider } from '../../../shared/providers/hash/models/hash-provider.interface';
@@ -10,10 +12,14 @@ interface IRequest {
   remember_me: boolean;
 }
 
+@injectable()
 class SigninService {
   constructor(
+    @inject('UsersRepository')
     private usersRepository: IUsersRepository,
+    @inject('HashProvider')
     private hashProvider: IHashProvider,
+    @inject('JwtProvider')
     private jwtProvider: IJwtProvider
   ) {}
 

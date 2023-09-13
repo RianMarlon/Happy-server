@@ -1,3 +1,5 @@
+import { injectable, inject } from 'tsyringe';
+
 import AppError from '../../../shared/errors/app-error';
 
 import { IJwtProvider } from '../../../shared/providers/jwt/models/jwt-provider.interface';
@@ -11,9 +13,12 @@ interface IResponse {
   is_admin: boolean;
 }
 
+@injectable()
 class ValidateTokenService {
   constructor(
+    @inject('UsersRepository')
     private usersRepository: IUsersRepository,
+    @inject('JwtProvider')
     private jwtProvider: IJwtProvider
   ) {}
 

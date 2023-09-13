@@ -1,21 +1,13 @@
 import { Request, Response } from 'express';
-
-import UsersRepository from '../../../../users/infra/typeorm/repositories/users-repository';
+import { container } from 'tsyringe';
 
 import ValidateTokenService from '../../../services/validate-token-service';
-
-import JsonWebTokenProvider from '../../../../../shared/providers/jwt/implementations/jsonwebtoken-provider';
 
 class ValidateTokenController {
   async handleRequest(request: Request, response: Response): Promise<Response> {
     const { token } = request.body;
 
-    const usersRepository = new UsersRepository();
-    const jsonWebTokenProvider = new JsonWebTokenProvider();
-    const validateTokenService = new ValidateTokenService(
-      usersRepository,
-      jsonWebTokenProvider
-    );
+    const validateTokenService = container.resolve(ValidateTokenService);
     const { is_admin } = await validateTokenService.execute({
       token,
     });

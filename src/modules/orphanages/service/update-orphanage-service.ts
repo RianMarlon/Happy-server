@@ -1,3 +1,5 @@
+import { injectable, inject } from 'tsyringe';
+
 import AppError from '../../../shared/errors/app-error';
 
 import convertHourToMinute from '../../../shared/utils/convertHourToMinute';
@@ -24,11 +26,14 @@ interface IRequest {
   }[];
 }
 
+@injectable()
 class UpdateOrphanageService {
   constructor(
+    @inject('OrphanagesRepository')
     private orphanagesRepository: IOrphanagesRepository,
     private createImagesService: CreateImagesService,
     private deleteImagesByOrphanageService: DeleteImagesByOrphanageService,
+    @inject('FileStorageProvider')
     private fileStorageProvider: IFileStorageProvider
   ) {}
 

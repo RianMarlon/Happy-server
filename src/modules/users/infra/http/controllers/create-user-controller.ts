@@ -1,10 +1,8 @@
 import { Request, Response } from 'express';
 import * as Yup from 'yup';
+import { container } from 'tsyringe';
 
-import BcryptHashProvider from '../../../../../shared/providers/hash/implementations/bcrypt-hash-provider';
-import MailtrapProvider from '../../../../../shared/providers/mail/implementations/mailtrap-provider';
 import CreateUserService from '../../../services/create-user-service';
-import UsersRepository from '../../typeorm/repositories/users-repository';
 
 class CreateUserController {
   async handleRequest(request: Request, response: Response): Promise<Response> {
@@ -44,15 +42,7 @@ class CreateUserController {
       abortEarly: false,
     });
 
-    const usersRepository = new UsersRepository();
-    const bcryptHashProvier = new BcryptHashProvider();
-    const mailtrapProvider = new MailtrapProvider();
-
-    const createUserService = new CreateUserService(
-      usersRepository,
-      bcryptHashProvier,
-      mailtrapProvider
-    );
+    const createUserService = container.resolve(CreateUserService);
     await createUserService.execute(data);
 
     return response.status(201).json();

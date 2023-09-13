@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import * as Yup from 'yup';
-import DiskStorageProvider from '../../../../../shared/providers/file-storage/implementations/disk-storage-provider';
+import { container } from 'tsyringe';
+
 import CreateOrphanageService from '../../../service/create-orphanage-service';
-import OrphanagesRepository from '../../typeorm/repositories/orphanages-repository';
 
 class CreateOrphanageController {
   async handleRequest(request: Request, response: Response): Promise<Response> {
@@ -80,12 +80,7 @@ class CreateOrphanageController {
       abortEarly: false,
     });
 
-    const orphanagesRepository = new OrphanagesRepository();
-    const diskStorageProvider = new DiskStorageProvider();
-    const createOrphanageService = new CreateOrphanageService(
-      orphanagesRepository,
-      diskStorageProvider
-    );
+    const createOrphanageService = container.resolve(CreateOrphanageService);
     await createOrphanageService.execute({
       ...data,
       latitude: Number(data.latitude),

@@ -1,12 +1,8 @@
 import { Request, Response } from 'express';
 import * as Yup from 'yup';
-import DiskStorageProvider from '../../../../../shared/providers/file-storage/implementations/disk-storage-provider';
-import ImagesRepository from '../../../../images/infra/typeorm/repositories/images-repository';
-import CreateImagesService from '../../../../images/services/create-images-service';
-import DeleteImagesByOrphanageService from '../../../../images/services/delete-images-by-orphanage-service';
+import { container } from 'tsyringe';
 
 import UpdateOrphanageService from '../../../service/update-orphanage-service';
-import OrphanagesRepository from '../../typeorm/repositories/orphanages-repository';
 
 class UpdateOrphanageController {
   async handleRequest(request: Request, response: Response): Promise<Response> {
@@ -84,20 +80,7 @@ class UpdateOrphanageController {
       }
     );
 
-    const orphanagesRepository = new OrphanagesRepository();
-    const imagesRepository = new ImagesRepository();
-
-    const createImagesService = new CreateImagesService(imagesRepository);
-    const deleteImagesByOrphanageService = new DeleteImagesByOrphanageService(
-      imagesRepository
-    );
-    const diskStorageProvider = new DiskStorageProvider();
-    const updateOrphanageService = new UpdateOrphanageService(
-      orphanagesRepository,
-      createImagesService,
-      deleteImagesByOrphanageService,
-      diskStorageProvider
-    );
+    const updateOrphanageService = container.resolve(UpdateOrphanageService);
     await updateOrphanageService.execute(Number(id), data);
 
     return response.status(200).json();

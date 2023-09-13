@@ -1,12 +1,8 @@
 import { Request, Response } from 'express';
 import * as Yup from 'yup';
-
-import UsersRepository from '../../../../users/infra/typeorm/repositories/users-repository';
+import { container } from 'tsyringe';
 
 import SigninService from '../../../services/signin-service';
-
-import BcryptHashProvider from '../../../../../shared/providers/hash/implementations/bcrypt-hash-provider';
-import JsonWebTokenProvider from '../../../../../shared/providers/jwt/implementations/jsonwebtoken-provider';
 
 class SigninController {
   async handleRequest(request: Request, response: Response): Promise<Response> {
@@ -28,14 +24,7 @@ class SigninController {
       abortEarly: false,
     });
 
-    const usersRepository = new UsersRepository();
-    const bcryptHashProvider = new BcryptHashProvider();
-    const jsonWebTokenProvider = new JsonWebTokenProvider();
-    const signinService = new SigninService(
-      usersRepository,
-      bcryptHashProvider,
-      jsonWebTokenProvider
-    );
+    const signinService = container.resolve(SigninService);
     const token = await signinService.execute({
       email,
       password,

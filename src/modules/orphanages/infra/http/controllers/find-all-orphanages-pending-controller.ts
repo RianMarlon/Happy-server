@@ -1,9 +1,8 @@
 import { Request, Response } from 'express';
+import { container } from 'tsyringe';
 
 import orphanagesView from '../../../../../shared/views/orphanagesView';
 import FindAllOrphanagesPaginatedService from '../../../service/find-all-orphanages-paginated-service';
-
-import OrphanagesRepository from '../../typeorm/repositories/orphanages-repository';
 
 class FindAllOrphanagesPendingController {
   async handleRequest(request: Request, response: Response): Promise<Response> {
@@ -13,9 +12,9 @@ class FindAllOrphanagesPendingController {
     const limit = perPage;
     const offset = perPage * (page - 1);
 
-    const orphanagesRepository = new OrphanagesRepository();
-    const findAllOrphanagesPaginatedService =
-      new FindAllOrphanagesPaginatedService(orphanagesRepository);
+    const findAllOrphanagesPaginatedService = container.resolve(
+      FindAllOrphanagesPaginatedService
+    );
     const paginated = await findAllOrphanagesPaginatedService.execute(
       false,
       limit,

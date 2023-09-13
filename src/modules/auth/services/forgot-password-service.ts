@@ -1,3 +1,4 @@
+import { injectable, inject } from 'tsyringe';
 import { resolve } from 'path';
 
 import AppError from '../../../shared/errors/app-error';
@@ -10,10 +11,14 @@ interface IRequest {
   email: string;
 }
 
+@injectable()
 class ForgotPasswordService {
   constructor(
+    @inject('UsersRepository')
     private usersRepository: IUsersRepository,
+    @inject('MailProvider')
     private mailProvider: IMailProvider,
+    @inject('JwtProvider')
     private jwtProvider: IJwtProvider
   ) {}
 

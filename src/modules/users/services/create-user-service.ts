@@ -1,8 +1,10 @@
-import jwt from 'jsonwebtoken';
 import { resolve } from 'path';
+import { injectable, inject } from 'tsyringe';
 
 import AppError from '../../../shared/errors/app-error';
+
 import { IHashProvider } from '../../../shared/providers/hash/models/hash-provider.interface';
+import { IJwtProvider } from '../../../shared/providers/jwt/models/jwt-provider.interface';
 import { IMailProvider } from '../../../shared/providers/mail/models/mail-provider.interface';
 import { IUsersRepository } from '../domain/repositories/users-repository.interface';
 
@@ -13,11 +15,17 @@ interface IRequest {
   password: string;
 }
 
+@injectable()
 class CreateUserService {
   constructor(
+    @inject('UsersRepository')
     private usersRepository: IUsersRepository,
+    @inject('HashProvider')
     private hashProvider: IHashProvider,
-    private mailProvider: IMailProvider
+    @inject('MailProvider')
+    private mailProvider: IMailProvider,
+    @inject('JwtProvider')
+    private jwtProvider: IJwtProvider
   ) {}
 
   async execute(data: IRequest): Promise<void> {
@@ -41,7 +49,7 @@ class CreateUserService {
       id: user.id,
     };
 
-    const token = jwt.sign(
+    const token = this.jwtProvider.sign(
       { ...payload },
       process.env.AUTH_SECRET_CONFIRM_EMAIL as string
     );

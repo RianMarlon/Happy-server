@@ -38,12 +38,6 @@ class UpdateOrphanageService {
   ) {}
 
   async execute(id: number, data: IRequest): Promise<void> {
-    const orphanageById = await this.orphanagesRepository.findById(id);
-
-    if (!orphanageById) {
-      throw new AppError('Nenhum orfanato encontrado!', 404);
-    }
-
     const newData = {
       ...data,
       open_from: convertHourToMinute(data.open_from),
@@ -60,6 +54,12 @@ class UpdateOrphanageService {
         'Necessário, no mínimo, disponibilidade de 30 minutos para visitas!',
         400
       );
+    }
+
+    const orphanageById = await this.orphanagesRepository.findById(id);
+
+    if (!orphanageById) {
+      throw new AppError('Nenhum orfanato encontrado!', 404);
     }
 
     const orphanageByLocation = await this.orphanagesRepository.findByLocation({
@@ -90,7 +90,7 @@ class UpdateOrphanageService {
       });
 
       await this.createImagesService.execute(newImages);
-      for (const image of orphanageById.images) {
+      for (const image of newImages) {
         await this.fileStorageProvider.save(image.path);
       }
     }

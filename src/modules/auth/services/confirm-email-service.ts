@@ -30,7 +30,7 @@ class ConfirmEmailService {
       throw new AppError('Usuário não encontrado!', 400);
     }
 
-    if (userByToken?.verified_email) {
+    if (userByToken.verified_email) {
       throw new AppError('Usuário já confirmou o e-mail!', 400);
     }
 

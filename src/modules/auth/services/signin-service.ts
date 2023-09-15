@@ -39,7 +39,7 @@ class SigninService {
       throw new AppError('E-mail ou senha inválido!', 400);
     }
 
-    if (!userByEmail?.verified_email) {
+    if (!userByEmail.verified_email) {
       throw new AppError('Usuário não confirmou o e-mail!', 400);
     }
 

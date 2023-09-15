@@ -7,7 +7,7 @@ class FakeJwtProvider implements IJwtProvider {
   }
 
   verify(): string | IJwtPayload {
-    return '';
+    return { id: 1 };
   }
 }
 

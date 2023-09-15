@@ -50,7 +50,7 @@ class ForgotPasswordService {
     const mailPath = resolve('./src/templates/emails/auth/forgotPassword.hbs');
 
     const to = email;
-    const from = `Happy <${process.env.MAIL_SERVICE_EMAIL}>`;
+    const from = `Happy <${process.env.MAIL_EMAIL}>`;
 
     const variables = {
       mailUrl: process.env.MAIL_URL,

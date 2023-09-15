@@ -13,18 +13,11 @@ class MailtrapProvider implements IMailProvider {
     templatePath: string
   ) {
     const transporter = nodemailer.createTransport({
-      host: process.env.MAIL_SERVICE_HOST,
-      port: Number(process.env.MAIL_SERVICE_PORT),
+      host: process.env.MAIL_HOST,
+      port: Number(process.env.MAIL_PORT),
       auth: {
-        type: process.env.MAIL_SERVICE_TYPE as any,
-        user: process.env.MAIL_SERVICE_USER,
-        clientId: process.env.MAIL_SERVICE_CLIENT_ID,
-        clientSecret: process.env.MAIL_SERVICE_CLIENT_SECRET,
-        refreshToken: process.env.MAIL_SERVICE_REFRESH_TOKEN,
-        accessToken: process.env.MAIL_SERVICE_ACCESS_TOKEN,
-      },
-      tls: {
-        rejectUnauthorized: false,
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PASSWORD,
       },
     });
 

@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
 import orphanagesView from '../../../../../shared/views/orphanagesView';
-import ShowOrphanageService from '../../../service/show-orphanage-service';
+import ShowOrphanageService from '../../../services/show-orphanage-service';
 
 class ShowOrphanageController {
   async handleRequest(request: Request, response: Response): Promise<Response> {

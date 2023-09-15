@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import * as Yup from 'yup';
 import { container } from 'tsyringe';
 
-import UpdateOrphanageService from '../../../service/update-orphanage-service';
+import UpdateOrphanageService from '../../../services/update-orphanage-service';
 
 class UpdateOrphanageController {
   async handleRequest(request: Request, response: Response): Promise<Response> {

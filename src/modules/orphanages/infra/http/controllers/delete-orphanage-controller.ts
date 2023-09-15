@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
-import DeleteOrphanageService from '../../../service/delete-orphanage-service';
+import DeleteOrphanageService from '../../../services/delete-orphanage-service';
 
 class DeleteOrphanageController {
   async handleRequest(request: Request, response: Response): Promise<Response> {

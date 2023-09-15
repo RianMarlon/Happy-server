@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
-import ConfirmOrphanageService from '../../../service/confirm-orphanage-service';
+import ConfirmOrphanageService from '../../../services/confirm-orphanage-service';
 
 class ConfirmOrphanageController {
   async handleRequest(request: Request, response: Response): Promise<Response> {

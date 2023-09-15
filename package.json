@@ -17,9 +17,7 @@
     "node": "16.x.x"
   },
   "dependencies": {
-    "@types/better-sqlite3": "^7.6.4",
     "bcrypt": "^5.0.0",
-    "better-sqlite3": "^7.6.2",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "dotenv": "^8.2.0",
@@ -48,6 +46,7 @@
     "@types/yup": "^0.29.8",
     "@typescript-eslint/eslint-plugin": "^6.4.1",
     "@typescript-eslint/parser": "^6.4.1",
+    "better-sqlite3": "^7.6.2",
     "eslint": "~8.17.0",
     "eslint-config": "^0.3.0",
     "eslint-plugin-prettier": "^5.0.0",

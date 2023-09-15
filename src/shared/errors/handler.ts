@@ -1,9 +1,11 @@
 import { ErrorRequestHandler } from 'express';
-import { TokenExpiredError } from 'jsonwebtoken';
+import { JsonWebTokenError } from 'jsonwebtoken';
 import { ValidationError } from 'yup';
+
 import removeImages from '../utils/removeImages';
 import AppError from './app-error';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const errorHandler: ErrorRequestHandler = (error, request, response, next) => {
   const requestImages = request.files as Express.Multer.File[];
 
@@ -36,10 +38,9 @@ const errorHandler: ErrorRequestHandler = (error, request, response, next) => {
     return response.status(400).json({
       messagesError,
     });
-  } else if (error instanceof TokenExpiredError) {
+  } else if (error instanceof JsonWebTokenError) {
     return response.status(401).json({
-      messagesError: ['Token expirado'],
-      is_valid_token: false,
+      messagesError: ['Token inválido'],
     });
   }
 

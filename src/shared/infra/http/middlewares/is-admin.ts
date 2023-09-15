@@ -14,7 +14,7 @@ export default async function (
     });
   }
 
-  const [scheme, token] = authHeader.split(' ');
+  const [, token] = authHeader.split(' ');
 
   if (!token) {
     return response.status(401).json({

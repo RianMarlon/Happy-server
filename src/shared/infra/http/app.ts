@@ -5,7 +5,6 @@ import 'express-async-errors';
 import cors from 'cors';
 import 'dotenv/config';
 
-import '../typeorm/connection';
 import '../../container';
 import routes from './routes';
 import errorHandler from '../../errors/handler';

@@ -1,4 +1,6 @@
-import { getRepository, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
+
+import { dataSource } from '../../../../../shared/infra/typeorm';
 import { ICreateImage } from '../../../domain/models/create-image.interface';
 
 import { IImagesRepository } from '../../../domain/repositories/images-repository.interface';
@@ -8,7 +10,7 @@ class ImagesRepository implements IImagesRepository {
   private repository: Repository<Image>;
 
   constructor() {
-    this.repository = getRepository(Image);
+    this.repository = dataSource.getRepository(Image);
   }
 
   async create(imagesToCreate: ICreateImage[]): Promise<Image[]> {

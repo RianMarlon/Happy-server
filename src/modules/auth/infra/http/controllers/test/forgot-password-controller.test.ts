@@ -1,29 +1,18 @@
 import request from 'supertest';
-import {
-  getConnectionOptions,
-  createConnection,
-  Connection,
-  getRepository,
-} from 'typeorm';
 
 import { app } from '../../../../../../shared/infra/http/app';
+import { dataSource } from '../../../../../../shared/infra/typeorm';
 
 import User from '../../../../../users/infra/typeorm/entities/user';
 import MailtrapProvider from '../../../../../../shared/providers/mail/implementations/mailtrap-provider';
 
 describe('ForgotPasswordController Tests', () => {
-  let connection: Connection;
-
   beforeAll(async () => {
-    const connectionOptions = await getConnectionOptions('test');
-    connection = await createConnection({
-      ...connectionOptions,
-      name: 'default',
-    });
+    await dataSource.initialize();
   });
 
   afterAll(async () => {
-    await connection.close();
+    await dataSource.destroy();
   });
 
   beforeEach(async () => {
@@ -33,7 +22,7 @@ describe('ForgotPasswordController Tests', () => {
   });
 
   afterEach(async () => {
-    const usersRepository = getRepository(User);
+    const usersRepository = dataSource.getRepository(User);
     await usersRepository.clear();
   });
 
@@ -50,7 +39,7 @@ describe('ForgotPasswordController Tests', () => {
       confirm_password: 'teste1234',
     });
 
-    const usersRepository = getRepository(User);
+    const usersRepository = dataSource.getRepository(User);
     await usersRepository.update(
       {
         email: 'teste@teste.com',
@@ -84,7 +73,7 @@ describe('ForgotPasswordController Tests', () => {
       confirm_password: 'teste1234',
     });
 
-    const usersRepository = getRepository(User);
+    const usersRepository = dataSource.getRepository(User);
     await usersRepository.update(
       {
         email: 'teste@teste.com',

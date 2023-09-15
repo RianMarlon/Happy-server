@@ -1,29 +1,14 @@
 import request from 'supertest';
-import {
-  getConnectionOptions,
-  createConnection,
-  Connection,
-  getRepository,
-} from 'typeorm';
 
 import { app } from '../../../../../../shared/infra/http/app';
+import { dataSource } from '../../../../../../shared/infra/typeorm';
 
 import User from '../../../../../users/infra/typeorm/entities/user';
 import MailtrapProvider from '../../../../../../shared/providers/mail/implementations/mailtrap-provider';
 
 describe('CreateUserController Tests', () => {
-  let connection: Connection;
-
   beforeAll(async () => {
-    const connectionOptions = await getConnectionOptions('test');
-    connection = await createConnection({
-      ...connectionOptions,
-      name: 'default',
-    });
-  });
-
-  afterAll(async () => {
-    await connection.close();
+    await dataSource.initialize();
   });
 
   beforeEach(async () => {
@@ -33,8 +18,12 @@ describe('CreateUserController Tests', () => {
   });
 
   afterEach(async () => {
-    const usersRepository = getRepository(User);
+    const usersRepository = dataSource.getRepository(User);
     await usersRepository.clear();
+  });
+
+  afterAll(async () => {
+    await dataSource.destroy();
   });
 
   it('should register a new user', async () => {

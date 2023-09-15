@@ -1,4 +1,6 @@
-import { getRepository, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
+
+import { dataSource } from '../../../../../shared/infra/typeorm';
 
 import { ICreateUser } from '../../../domain/models/create-user.interface';
 import { IUser } from '../../../domain/models/user.interface';
@@ -9,10 +11,10 @@ class UsersRepository implements IUsersRepository {
   private repository: Repository<User>;
 
   constructor() {
-    this.repository = getRepository(User);
+    this.repository = dataSource.getRepository(User);
   }
 
-  async findByEmail(email: string): Promise<User | undefined> {
+  async findByEmail(email: string): Promise<User | null> {
     return await this.repository.findOne({
       where: {
         email: email.toLowerCase(),
@@ -20,7 +22,7 @@ class UsersRepository implements IUsersRepository {
     });
   }
 
-  async findById(id: number): Promise<User | undefined> {
+  async findById(id: number): Promise<User | null> {
     return await this.repository.findOne({
       where: {
         id,

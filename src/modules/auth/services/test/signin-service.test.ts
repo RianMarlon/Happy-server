@@ -56,7 +56,7 @@ describe('SigninService Tests', () => {
 
   it('should return an error when not exists an user with the email informed', async () => {
     spyFindUserByEmail.mockImplementationOnce(async () => {
-      return undefined;
+      return null;
     });
 
     await expect(

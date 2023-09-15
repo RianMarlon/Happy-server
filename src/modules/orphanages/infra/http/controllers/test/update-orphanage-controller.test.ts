@@ -1,10 +1,4 @@
 import request from 'supertest';
-import {
-  getConnectionOptions,
-  createConnection,
-  Connection,
-  getRepository,
-} from 'typeorm';
 import path from 'path';
 
 import { app } from '../../../../../../shared/infra/http/app';
@@ -15,6 +9,7 @@ import Orphanage from '../../../typeorm/entities/orphanage';
 
 import MailtrapProvider from '../../../../../../shared/providers/mail/implementations/mailtrap-provider';
 import DiskStorageProvider from '../../../../../../shared/providers/file-storage/implementations/disk-storage-provider';
+import { dataSource } from '../../../../../../shared/infra/typeorm';
 
 interface IUserData {
   first_name: string;
@@ -29,7 +24,7 @@ async function createUserAndReturnAccessToken(
   isAdmin: boolean
 ) {
   await request(app).post('/signup').send(data);
-  const usersRepository = getRepository(User);
+  const usersRepository = dataSource.getRepository(User);
   await usersRepository.update(
     {
       email: data.email,
@@ -47,15 +42,10 @@ async function createUserAndReturnAccessToken(
 }
 
 describe('UpdateOrphanageController Tests', () => {
-  let connection: Connection;
   let accessTokenAdmin: string;
 
   beforeAll(async () => {
-    const connectionOptions = await getConnectionOptions('test');
-    connection = await createConnection({
-      ...connectionOptions,
-      name: 'default',
-    });
+    await dataSource.initialize();
     accessTokenAdmin = await createUserAndReturnAccessToken(
       {
         first_name: 'Teste',
@@ -75,8 +65,8 @@ describe('UpdateOrphanageController Tests', () => {
   });
 
   afterEach(async () => {
-    const imagesRepository = getRepository(Image);
-    const orphanagesRepository = getRepository(Orphanage);
+    const imagesRepository = dataSource.getRepository(Image);
+    const orphanagesRepository = dataSource.getRepository(Orphanage);
     const orphanages = await orphanagesRepository.find({
       relations: ['images'],
     });
@@ -84,7 +74,6 @@ describe('UpdateOrphanageController Tests', () => {
     for (const orphanage of orphanages) {
       if (orphanage.images) {
         for (const image of orphanage.images) {
-          console.log('ENTREI');
           await diskStorageProvider.delete(image.path);
         }
       }
@@ -94,13 +83,13 @@ describe('UpdateOrphanageController Tests', () => {
   });
 
   afterAll(async () => {
-    const usersRepository = getRepository(User);
+    const usersRepository = dataSource.getRepository(User);
     await usersRepository.clear();
-    await connection.close();
+    await dataSource.destroy();
   });
 
   it('should update orphanage by id', async () => {
-    const orphanagesRepository = getRepository(Orphanage);
+    const orphanagesRepository = dataSource.getRepository(Orphanage);
     await orphanagesRepository.insert([
       {
         id: 1,
@@ -163,7 +152,7 @@ describe('UpdateOrphanageController Tests', () => {
   });
 
   it('should return an error when already exists an orphanage on the location', async () => {
-    const orphanagesRepository = getRepository(Orphanage);
+    const orphanagesRepository = dataSource.getRepository(Orphanage);
     await orphanagesRepository.insert([
       {
         id: 1,
@@ -217,7 +206,7 @@ describe('UpdateOrphanageController Tests', () => {
   });
 
   it('should return an error when the open from is greater than open util', async () => {
-    const orphanagesRepository = getRepository(Orphanage);
+    const orphanagesRepository = dataSource.getRepository(Orphanage);
     await orphanagesRepository.insert([
       {
         id: 1,
@@ -258,7 +247,7 @@ describe('UpdateOrphanageController Tests', () => {
   });
 
   it('should return an error when the difference between open from and open until is less than 30 minutes', async () => {
-    const orphanagesRepository = getRepository(Orphanage);
+    const orphanagesRepository = dataSource.getRepository(Orphanage);
     await orphanagesRepository.insert([
       {
         id: 1,
@@ -301,7 +290,7 @@ describe('UpdateOrphanageController Tests', () => {
   });
 
   it('should return an error when the fields are not informed', async () => {
-    const orphanagesRepository = getRepository(Orphanage);
+    const orphanagesRepository = dataSource.getRepository(Orphanage);
     await orphanagesRepository.insert([
       {
         id: 1,
@@ -337,7 +326,7 @@ describe('UpdateOrphanageController Tests', () => {
   });
 
   it('should return an error when open until and open from are invalid', async () => {
-    const orphanagesRepository = getRepository(Orphanage);
+    const orphanagesRepository = dataSource.getRepository(Orphanage);
     await orphanagesRepository.insert([
       {
         id: 1,

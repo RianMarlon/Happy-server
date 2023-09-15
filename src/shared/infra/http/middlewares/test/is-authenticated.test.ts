@@ -1,25 +1,15 @@
 import request from 'supertest';
-import {
-  getConnectionOptions,
-  createConnection,
-  Connection,
-  getRepository,
-} from 'typeorm';
 
 import { app } from '../../app';
+import { dataSource } from '../../../typeorm';
 
 import User from '../../../../../modules/users/infra/typeorm/entities/user';
 
 describe('isAutheticated Tests', () => {
-  let connection: Connection;
   let accessToken: string;
 
   beforeAll(async () => {
-    const connectionOptions = await getConnectionOptions('test');
-    connection = await createConnection({
-      ...connectionOptions,
-      name: 'default',
-    });
+    await dataSource.initialize();
     await request(app).post('/signup').send({
       first_name: 'Teste',
       last_name: 'Teste',
@@ -27,7 +17,7 @@ describe('isAutheticated Tests', () => {
       password: 'teste1234',
       confirm_password: 'teste1234',
     });
-    const usersRepository = getRepository(User);
+    const usersRepository = dataSource.getRepository(User);
     await usersRepository.update(
       {
         email: 'teste@teste.com',
@@ -44,9 +34,9 @@ describe('isAutheticated Tests', () => {
   });
 
   afterAll(async () => {
-    const usersRepository = getRepository(User);
+    const usersRepository = dataSource.getRepository(User);
     await usersRepository.clear();
-    await connection.close();
+    await dataSource.destroy();
   });
 
   it('should call the next function when the user is authorized', async () => {

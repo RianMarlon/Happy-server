@@ -1,10 +1,4 @@
 import request from 'supertest';
-import {
-  getConnectionOptions,
-  createConnection,
-  Connection,
-  getRepository,
-} from 'typeorm';
 
 import { app } from '../../../../../../shared/infra/http/app';
 
@@ -13,6 +7,7 @@ import Image from '../../../../../images/infra/typeorm/entities/image';
 import Orphanage from '../../../typeorm/entities/orphanage';
 
 import MailtrapProvider from '../../../../../../shared/providers/mail/implementations/mailtrap-provider';
+import { dataSource } from '../../../../../../shared/infra/typeorm';
 
 interface IUserData {
   first_name: string;
@@ -27,7 +22,7 @@ async function createUserAndReturnAccessToken(
   isAdmin: boolean
 ) {
   await request(app).post('/signup').send(data);
-  const usersRepository = getRepository(User);
+  const usersRepository = dataSource.getRepository(User);
   await usersRepository.update(
     {
       email: data.email,
@@ -45,15 +40,10 @@ async function createUserAndReturnAccessToken(
 }
 
 describe('FindAllOrphanagesController Tests', () => {
-  let connection: Connection;
   let accessTokenAdmin: string;
 
   beforeAll(async () => {
-    const connectionOptions = await getConnectionOptions('test');
-    connection = await createConnection({
-      ...connectionOptions,
-      name: 'default',
-    });
+    await dataSource.initialize();
     accessTokenAdmin = await createUserAndReturnAccessToken(
       {
         first_name: 'Teste',
@@ -70,20 +60,20 @@ describe('FindAllOrphanagesController Tests', () => {
     jest
       .spyOn(MailtrapProvider.prototype, 'send')
       .mockImplementation(jest.fn());
-    const imagesRepository = getRepository(Image);
-    const orphanagesRepository = getRepository(Orphanage);
+    const imagesRepository = dataSource.getRepository(Image);
+    const orphanagesRepository = dataSource.getRepository(Orphanage);
     await imagesRepository.clear();
     await orphanagesRepository.clear();
   });
 
   afterAll(async () => {
-    const usersRepository = getRepository(User);
+    const usersRepository = dataSource.getRepository(User);
     await usersRepository.clear();
-    await connection.close();
+    await dataSource.destroy();
   });
 
   it('should return all orphanages confirmed', async () => {
-    const orphanagesRepository = getRepository(Orphanage);
+    const orphanagesRepository = dataSource.getRepository(Orphanage);
     await orphanagesRepository.insert([
       {
         id: 1,
@@ -150,7 +140,7 @@ describe('FindAllOrphanagesController Tests', () => {
   });
 
   it('should return all orphanages confirmed with pagination', async () => {
-    const orphanagesRepository = getRepository(Orphanage);
+    const orphanagesRepository = dataSource.getRepository(Orphanage);
     await orphanagesRepository.insert([
       {
         id: 1,
@@ -221,7 +211,7 @@ describe('FindAllOrphanagesController Tests', () => {
   });
 
   it('should return an empty array when the page not have an orphanage confirmed', async () => {
-    const orphanagesRepository = getRepository(Orphanage);
+    const orphanagesRepository = dataSource.getRepository(Orphanage);
     await orphanagesRepository.insert([
       {
         id: 1,

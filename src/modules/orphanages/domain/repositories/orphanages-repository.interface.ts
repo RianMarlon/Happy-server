@@ -12,8 +12,8 @@ export interface IOrphanagesRepository {
     skip?: number,
     take?: number
   ): Promise<IOrphanage[]>;
-  findByLocation(location: ILocation): Promise<IOrphanage | undefined>;
-  findById(id: number): Promise<IOrphanage | undefined>;
+  findByLocation(location: ILocation): Promise<IOrphanage | null>;
+  findById(id: number): Promise<IOrphanage | null>;
   count(confirmed: boolean): Promise<number>;
   create(orphanageToCreate: ICreateOrphanage): Promise<IOrphanage>;
   update(

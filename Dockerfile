@@ -4,8 +4,10 @@ WORKDIR /usr/home/app
 
 COPY . .
 
-RUN yarn
+RUN yarn 
 
-CMD [ "yarn", "dev" ]
+RUN yarn build
+
+CMD [ "yarn", "start" ]
 
 EXPOSE 3000

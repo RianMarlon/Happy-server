@@ -22,11 +22,11 @@ class FakeOrphanagesRepository implements IOrphanagesRepository {
     return [orphanageMock];
   }
 
-  async findByLocation(): Promise<IOrphanage | undefined> {
-    return;
+  async findByLocation(): Promise<IOrphanage | null> {
+    return null;
   }
 
-  async findById(): Promise<IOrphanage | undefined> {
+  async findById(): Promise<IOrphanage | null> {
     return orphanageMock;
   }
 

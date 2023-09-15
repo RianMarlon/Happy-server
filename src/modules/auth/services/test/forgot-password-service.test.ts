@@ -51,7 +51,7 @@ describe('ForgotPasswordService Tests', () => {
 
   it('should return an error when user not exists with the email informed', async () => {
     spyFindUserByEmail.mockImplementationOnce(async () => {
-      return undefined;
+      return null;
     });
     await expect(
       forgotPasswordService.execute({

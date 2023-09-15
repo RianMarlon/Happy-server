@@ -45,7 +45,7 @@ describe('ConfirmEmailService Tests', () => {
 
   it('should return an error when user not exists', async () => {
     spyFindUserById.mockImplementationOnce(async () => {
-      return undefined;
+      return null;
     });
     await expect(
       confirmEmailService.execute({

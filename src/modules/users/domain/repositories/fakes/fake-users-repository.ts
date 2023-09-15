@@ -12,11 +12,11 @@ const userMock = {
 };
 
 class FakeUsersRepository implements IUsersRepository {
-  async findByEmail(): Promise<IUser | undefined> {
-    return;
+  async findByEmail(): Promise<IUser | null> {
+    return null;
   }
 
-  async findById(): Promise<IUser | undefined> {
+  async findById(): Promise<IUser | null> {
     return userMock;
   }
 

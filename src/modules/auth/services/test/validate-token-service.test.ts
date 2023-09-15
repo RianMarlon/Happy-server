@@ -82,7 +82,7 @@ describe('ValidateTokenService Tests', () => {
 
   it('should return an error when user already confirm the email', async () => {
     spyFindUserById.mockImplementationOnce(async () => {
-      return undefined;
+      return null;
     });
     await expect(
       validateTokenService.execute({

@@ -1,30 +1,19 @@
 import request from 'supertest';
 import jwt from 'jsonwebtoken';
-import {
-  getConnectionOptions,
-  createConnection,
-  Connection,
-  getRepository,
-} from 'typeorm';
 
 import { app } from '../../../../../../shared/infra/http/app';
+import { dataSource } from '../../../../../../shared/infra/typeorm';
 
 import User from '../../../../../users/infra/typeorm/entities/user';
 import MailtrapProvider from '../../../../../../shared/providers/mail/implementations/mailtrap-provider';
 
 describe('ConfirmEmailController Tests', () => {
-  let connection: Connection;
-
   beforeAll(async () => {
-    const connectionOptions = await getConnectionOptions('test');
-    connection = await createConnection({
-      ...connectionOptions,
-      name: 'default',
-    });
+    await dataSource.initialize();
   });
 
   afterAll(async () => {
-    await connection.close();
+    await dataSource.destroy();
   });
 
   beforeEach(async () => {
@@ -34,7 +23,7 @@ describe('ConfirmEmailController Tests', () => {
   });
 
   afterEach(async () => {
-    const usersRepository = getRepository(User);
+    const usersRepository = dataSource.getRepository(User);
     await usersRepository.clear();
   });
 
@@ -47,9 +36,11 @@ describe('ConfirmEmailController Tests', () => {
       confirm_password: 'teste1234',
     });
 
-    const usersRepository = getRepository(User);
+    const usersRepository = dataSource.getRepository(User);
     const userByEmail = await usersRepository.findOne({
-      email: 'teste@teste.com',
+      where: {
+        email: 'teste@teste.com',
+      },
     });
 
     const token = jwt.sign(
@@ -62,7 +53,9 @@ describe('ConfirmEmailController Tests', () => {
     });
 
     const userById = await usersRepository.findOne({
-      id: userByEmail?.id,
+      where: {
+        id: userByEmail?.id,
+      },
     });
 
     expect(userById?.verified_email).toBeTruthy();
@@ -94,7 +87,7 @@ describe('ConfirmEmailController Tests', () => {
       confirm_password: 'teste1234',
     });
 
-    const usersRepository = getRepository(User);
+    const usersRepository = dataSource.getRepository(User);
     await usersRepository.update(
       {
         email: 'teste@teste.com',
@@ -104,7 +97,9 @@ describe('ConfirmEmailController Tests', () => {
       }
     );
     const userByEmail = await usersRepository.findOne({
-      email: 'teste@teste.com',
+      where: {
+        email: 'teste@teste.com',
+      },
     });
 
     const token = jwt.sign(

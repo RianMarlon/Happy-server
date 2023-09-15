@@ -1,12 +1,7 @@
 import request from 'supertest';
-import {
-  getConnectionOptions,
-  createConnection,
-  Connection,
-  getRepository,
-} from 'typeorm';
 
 import { app } from '../../../../../../shared/infra/http/app';
+import { dataSource } from '../../../../../../shared/infra/typeorm';
 
 import User from '../../../../../users/infra/typeorm/entities/user';
 import Image from '../../../../../images/infra/typeorm/entities/image';
@@ -27,7 +22,7 @@ async function createUserAndReturnAccessToken(
   isAdmin: boolean
 ) {
   await request(app).post('/signup').send(data);
-  const usersRepository = getRepository(User);
+  const usersRepository = dataSource.getRepository(User);
   await usersRepository.update(
     {
       email: data.email,
@@ -45,15 +40,10 @@ async function createUserAndReturnAccessToken(
 }
 
 describe('FindAllOrphanagesConfirmedController Tests', () => {
-  let connection: Connection;
   let accessTokenUser: string;
 
   beforeAll(async () => {
-    const connectionOptions = await getConnectionOptions('test');
-    connection = await createConnection({
-      ...connectionOptions,
-      name: 'default',
-    });
+    await dataSource.initialize();
     accessTokenUser = await createUserAndReturnAccessToken(
       {
         first_name: 'Teste 2',
@@ -70,20 +60,20 @@ describe('FindAllOrphanagesConfirmedController Tests', () => {
     jest
       .spyOn(MailtrapProvider.prototype, 'send')
       .mockImplementation(jest.fn());
-    const imagesRepository = getRepository(Image);
-    const orphanagesRepository = getRepository(Orphanage);
+    const imagesRepository = dataSource.getRepository(Image);
+    const orphanagesRepository = dataSource.getRepository(Orphanage);
     await imagesRepository.clear();
     await orphanagesRepository.clear();
   });
 
   afterAll(async () => {
-    const usersRepository = getRepository(User);
+    const usersRepository = dataSource.getRepository(User);
     await usersRepository.clear();
-    await connection.close();
+    await dataSource.destroy();
   });
 
   it('should return all orphanages', async () => {
-    const orphanagesRepository = getRepository(Orphanage);
+    const orphanagesRepository = dataSource.getRepository(Orphanage);
     await orphanagesRepository.insert([
       {
         name: 'Teste',

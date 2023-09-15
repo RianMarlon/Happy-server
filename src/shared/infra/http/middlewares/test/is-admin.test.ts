@@ -1,12 +1,7 @@
 import request from 'supertest';
-import {
-  getConnectionOptions,
-  createConnection,
-  Connection,
-  getRepository,
-} from 'typeorm';
 
 import { app } from '../../app';
+import { dataSource } from '../../../typeorm';
 
 import User from '../../../../../modules/users/infra/typeorm/entities/user';
 
@@ -23,7 +18,7 @@ async function createUserAndReturnAccessToken(
   isAdmin: boolean
 ) {
   await request(app).post('/signup').send(data);
-  const usersRepository = getRepository(User);
+  const usersRepository = dataSource.getRepository(User);
   await usersRepository.update(
     {
       email: data.email,
@@ -41,16 +36,11 @@ async function createUserAndReturnAccessToken(
 }
 
 describe('isAdmin Tests', () => {
-  let connection: Connection;
   let accessTokenAdmin: string;
   let accessTokenUser: string;
 
   beforeAll(async () => {
-    const connectionOptions = await getConnectionOptions('test');
-    connection = await createConnection({
-      ...connectionOptions,
-      name: 'default',
-    });
+    await dataSource.initialize();
     accessTokenAdmin = await createUserAndReturnAccessToken(
       {
         first_name: 'Teste',
@@ -74,9 +64,9 @@ describe('isAdmin Tests', () => {
   });
 
   afterAll(async () => {
-    const usersRepository = getRepository(User);
+    const usersRepository = dataSource.getRepository(User);
     await usersRepository.clear();
-    await connection.close();
+    await dataSource.destroy();
   });
 
   it('should call the next function when the user is authorized', async () => {

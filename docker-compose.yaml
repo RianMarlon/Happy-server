@@ -10,7 +10,7 @@ services:
       - 3000:3000
     depends_on:
       - database
-    command: bash -c "yarn typeorm migration:run && yarn dev"
+    command: bash -c "yarn typeorm --dataSource ./dist/shared/infra/typeorm/index.js migration:run && yarn start"
   
   database:
     image: bitnami/postgresql:latest

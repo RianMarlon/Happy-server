@@ -124,7 +124,7 @@ describe('UpdateOrphanageService Tests', () => {
 
   it('should return an error when not exists an orphanage with the id', async () => {
     spyFindOrphanageById.mockImplementationOnce(async () => {
-      return undefined;
+      return null;
     });
 
     await expect(

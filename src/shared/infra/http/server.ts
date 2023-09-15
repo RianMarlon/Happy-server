@@ -1,3 +1,6 @@
 import { app } from './app';
+import { dataSource } from '../typeorm';
 
-app.listen(process.env.PORT || 3000);
+dataSource.initialize().then(() => {
+  app.listen(3000);
+});

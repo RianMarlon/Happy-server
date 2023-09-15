@@ -1,4 +1,6 @@
-import { getRepository, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
+
+import { dataSource } from '../../../../../shared/infra/typeorm';
 
 import { ICreateOrphanage } from '../../../domain/models/create-orphanage.interfae';
 import {
@@ -12,7 +14,7 @@ class OrphanagesRepository implements IOrphanagesRepository {
   private repository: Repository<Orphanage>;
 
   constructor() {
-    this.repository = getRepository(Orphanage);
+    this.repository = dataSource.getRepository(Orphanage);
   }
 
   async findAll(
@@ -39,7 +41,7 @@ class OrphanagesRepository implements IOrphanagesRepository {
     });
   }
 
-  async findByLocation(location: ILocation): Promise<Orphanage | undefined> {
+  async findByLocation(location: ILocation): Promise<Orphanage | null> {
     return await this.repository.findOne({
       relations: ['images'],
       where: {
@@ -49,7 +51,7 @@ class OrphanagesRepository implements IOrphanagesRepository {
     });
   }
 
-  async findById(id: number): Promise<Orphanage | undefined> {
+  async findById(id: number): Promise<Orphanage | null> {
     return await this.repository.findOne({
       relations: ['images'],
       where: {

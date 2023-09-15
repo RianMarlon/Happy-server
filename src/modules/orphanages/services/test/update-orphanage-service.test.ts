@@ -1,7 +1,5 @@
 import 'reflect-metadata';
 
-import { IImage } from '../../../images/domain/models/image.interface';
-
 import FakeFileStorageProvider from '../../../../shared/providers/file-storage/fakes/fake-file-storage-provider';
 import FakeImagesRepository from '../../../images/domain/repositories/fakes/fake-images-repository';
 import FakeOrphanagesRepository from '../../domain/repositories/fakes/fake-orphanages-repository';

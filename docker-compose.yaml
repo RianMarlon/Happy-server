@@ -11,6 +11,9 @@ services:
     depends_on:
       - database
     command: bash -c "yarn build && yarn typeorm --dataSource ./dist/shared/infra/typeorm/index.js migration:run && yarn start"
+    network_mode: host
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
   
   database:
     image: bitnami/postgresql:latest
@@ -21,6 +24,9 @@ services:
       - postgres_data:/bitnami/postgresql
     environment:
       - POSTGRES_PASSWORD=1234
+    network_mode: host
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
 
 volumes:
   postgres_data:

@@ -71,7 +71,7 @@ describe('orphanagesView Tests', () => {
           images: [
             {
               id: 1,
-              url: 'http://192.168.1.4:3333/uploads/teste.png',
+              url: 'http://localhost:3000/images/orphanages/teste.png',
             },
           ],
           instructions: 'Teste',
@@ -89,7 +89,7 @@ describe('orphanagesView Tests', () => {
           images: [
             {
               id: 1,
-              url: 'http://192.168.1.4:3333/uploads/teste.png',
+              url: 'http://localhost:3000/images/orphanages/teste.png',
             },
           ],
           instructions: 'Teste',
@@ -107,7 +107,7 @@ describe('orphanagesView Tests', () => {
           images: [
             {
               id: 1,
-              url: 'http://192.168.1.4:3333/uploads/teste.png',
+              url: 'http://localhost:3000/images/orphanages/teste.png',
             },
           ],
           instructions: 'Teste',
@@ -151,7 +151,7 @@ describe('orphanagesView Tests', () => {
         images: [
           {
             id: 1,
-            url: 'http://192.168.1.4:3333/uploads/teste.png',
+            url: 'http://localhost:3000/images/orphanages/teste.png',
           },
         ],
         instructions: 'Teste',

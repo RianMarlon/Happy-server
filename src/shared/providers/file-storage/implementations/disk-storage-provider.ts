@@ -6,6 +6,16 @@ import uploadConfig from '../../../../config/upload';
 import { IFileStorageProvider } from '../models/file-storage-provider.interface';
 
 class DiskStorageProvider implements IFileStorageProvider {
+  async get(filename: string): Promise<Buffer | null> {
+    try {
+      return await fs.promises.readFile(
+        path.join(uploadConfig.uploadFolder, filename)
+      );
+    } catch (error) {
+      return null;
+    }
+  }
+
   async save(filename: string): Promise<string> {
     await fs.promises.rename(
       path.resolve(uploadConfig.tempFolder, filename),

@@ -22,6 +22,7 @@ import ChangePasswordController from '../../../modules/auth/infra/http/controlle
 import ValidateTokenController from '../../../modules/auth/infra/http/controllers/validate-token-controller';
 
 import uploadConfig from '../../../config/upload';
+import { FindImageByFilenameController } from '../../../modules/images/infra/http/find-image-by-filename-controller';
 
 const routes = Router();
 const upload = multer(uploadConfig.multer);
@@ -36,6 +37,8 @@ const createOrphanageController = new CreateOrphanageController();
 const updateOrphanageController = new UpdateOrphanageController();
 const confirmOrphanageController = new ConfirmOrphanageController();
 const deleteOrphanageController = new DeleteOrphanageController();
+
+const findImageByFilenameController = new FindImageByFilenameController();
 
 const createUserController = new CreateUserController();
 
@@ -63,6 +66,10 @@ routes.post(
   isAuthenticated,
   upload.array('images'),
   createOrphanageController.handleRequest
+);
+routes.get(
+  '/images/orphanages/:filename',
+  findImageByFilenameController.handleRequest
 );
 routes.get(
   '/orphanages/:id',

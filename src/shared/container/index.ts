@@ -1,5 +1,7 @@
 import { container } from 'tsyringe';
 
+import config from '../../config';
+
 import { IUsersRepository } from '../../modules/users/domain/repositories/users-repository.interface';
 import { IImagesRepository } from '../../modules/images/domain/repositories/images-repository.interface';
 import { IOrphanagesRepository } from '../../modules/orphanages/domain/repositories/orphanages-repository.interface';
@@ -15,6 +17,7 @@ import BcryptHashProvider from '../providers/hash/implementations/bcrypt-hash-pr
 import JsonWebTokenProvider from '../providers/jwt/implementations/jsonwebtoken-provider';
 import DiskStorageProvider from '../providers/file-storage/implementations/disk-storage-provider';
 import MailtrapProvider from '../providers/mail/implementations/mailtrap-provider';
+import S3StorageProvider from '../providers/file-storage/implementations/s3-storage-provider';
 
 container.registerSingleton<IUsersRepository>(
   'UsersRepository',
@@ -37,7 +40,7 @@ container.registerSingleton<IJwtProvider>('JwtProvider', JsonWebTokenProvider);
 
 container.registerSingleton<IFileStorageProvider>(
   'FileStorageProvider',
-  DiskStorageProvider
+  config.NODE_ENV === 'test' ? DiskStorageProvider : S3StorageProvider
 );
 
 container.registerSingleton<IMailProvider>('MailProvider', MailtrapProvider);

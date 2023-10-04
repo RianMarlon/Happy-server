@@ -4,6 +4,7 @@ import { ValidationError } from 'yup';
 
 import removeImages from '../utils/removeImages';
 import AppError from './app-error';
+import uploadConfig from '../../config/upload';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const errorHandler: ErrorRequestHandler = (error, request, response, next) => {
@@ -19,8 +20,7 @@ const errorHandler: ErrorRequestHandler = (error, request, response, next) => {
     const filenames = images.map((image) => image.path);
 
     if (requestImages[0]) {
-      const destination = (requestImages[0] as any).destination;
-      removeImages(destination, filenames);
+      removeImages(uploadConfig.tempFolder, filenames);
     }
   }
 

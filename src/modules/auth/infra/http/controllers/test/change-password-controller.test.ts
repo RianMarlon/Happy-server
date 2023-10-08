@@ -24,7 +24,7 @@ describe('ChangePasswordController Tests', () => {
 
   afterEach(async () => {
     const usersRepository = dataSource.getRepository(User);
-    await usersRepository.clear();
+    await usersRepository.delete({});
   });
 
   it('should return status code 204 when password is changed', async () => {
@@ -71,7 +71,7 @@ describe('ChangePasswordController Tests', () => {
   });
 
   it('should return an error when the user of token not exists', async () => {
-    const token = jwt.sign({ id: 'teste' }, process.env.AUTH_SECRET as string, {
+    const token = jwt.sign({ id: 1 }, process.env.AUTH_SECRET as string, {
       expiresIn: '1d',
     });
     const response = await request(app).put('/change-password').send({

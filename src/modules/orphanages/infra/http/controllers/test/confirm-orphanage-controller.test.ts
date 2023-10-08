@@ -63,21 +63,20 @@ describe('ConfirmOrphanageController Tests', () => {
       .mockImplementation(jest.fn());
     const imagesRepository = dataSource.getRepository(Image);
     const orphanagesRepository = dataSource.getRepository(Orphanage);
-    await imagesRepository.clear();
-    await orphanagesRepository.clear();
+    await imagesRepository.delete({});
+    await orphanagesRepository.delete({});
   });
 
   afterAll(async () => {
     const usersRepository = dataSource.getRepository(User);
-    await usersRepository.clear();
+    await usersRepository.delete({});
     await dataSource.destroy();
   });
 
   it('should confirm a orphanage pending by id', async () => {
     const orphanagesRepository = dataSource.getRepository(Orphanage);
-    await orphanagesRepository.insert([
+    const { identifiers } = await orphanagesRepository.insert([
       {
-        id: 1,
         name: 'Teste',
         latitude: -5.101444,
         longitude: -38.369682,
@@ -91,7 +90,7 @@ describe('ConfirmOrphanageController Tests', () => {
       },
     ]);
     const response = await request(app)
-      .put('/orphanages/1/confirm')
+      .put(`/orphanages/${identifiers[0].id}/confirm`)
       .set({ Authorization: `Basic ${accessTokenAdmin}` });
 
     expect(response.status).toBe(200);

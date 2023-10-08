@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 
+import config from '../../../../config';
+
 export default async function (
   request: Request,
   response: Response,
@@ -22,10 +24,7 @@ export default async function (
     });
   }
 
-  const payload = jwt.verify(
-    token,
-    process.env.AUTH_SECRET as string
-  ) as JwtPayload;
+  const payload = jwt.verify(token, config.AUTH_SECRET) as JwtPayload;
 
   if (!payload.isAdmin) {
     return response.status(401).json({

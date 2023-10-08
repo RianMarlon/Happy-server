@@ -78,13 +78,13 @@ describe('CreateOrphanageController Tests', () => {
         }
       }
     }
-    await imagesRepository.clear();
-    await orphanagesRepository.clear();
+    await imagesRepository.delete({});
+    await orphanagesRepository.delete({});
   });
 
   afterAll(async () => {
     const usersRepository = dataSource.getRepository(User);
-    await usersRepository.clear();
+    await usersRepository.delete({});
     await dataSource.destroy();
   });
 

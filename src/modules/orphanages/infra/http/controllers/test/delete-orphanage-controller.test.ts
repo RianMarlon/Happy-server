@@ -65,21 +65,20 @@ describe('DeleteOrphanageController Tests', () => {
   afterEach(async () => {
     const imagesRepository = dataSource.getRepository(Image);
     const orphanagesRepository = dataSource.getRepository(Orphanage);
-    await imagesRepository.clear();
-    await orphanagesRepository.clear();
+    await imagesRepository.delete({});
+    await orphanagesRepository.delete({});
   });
 
   afterAll(async () => {
     const usersRepository = dataSource.getRepository(User);
-    await usersRepository.clear();
+    await usersRepository.delete({});
     await dataSource.destroy();
   });
 
   it('should delete orphanage by id', async () => {
     const orphanagesRepository = dataSource.getRepository(Orphanage);
-    await orphanagesRepository.insert([
+    const { identifiers } = await orphanagesRepository.insert([
       {
-        id: 1,
         name: 'Teste',
         latitude: -5.101444,
         longitude: -38.369682,
@@ -93,7 +92,7 @@ describe('DeleteOrphanageController Tests', () => {
       },
     ]);
     const response = await request(app)
-      .delete('/orphanages/1')
+      .delete(`/orphanages/${identifiers[0].id}`)
       .set({ Authorization: `Basic ${accessTokenAdmin}` });
 
     expect(response.status).toBe(204);

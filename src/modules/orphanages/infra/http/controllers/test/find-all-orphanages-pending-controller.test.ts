@@ -62,13 +62,13 @@ describe('FindAllOrphanagesPendingController Tests', () => {
       .mockImplementation(jest.fn());
     const imagesRepository = dataSource.getRepository(Image);
     const orphanagesRepository = dataSource.getRepository(Orphanage);
-    await imagesRepository.clear();
-    await orphanagesRepository.clear();
+    await imagesRepository.delete({});
+    await orphanagesRepository.delete({});
   });
 
   afterAll(async () => {
     const usersRepository = dataSource.getRepository(User);
-    await usersRepository.clear();
+    await usersRepository.delete({});
     await dataSource.destroy();
   });
 
@@ -76,7 +76,6 @@ describe('FindAllOrphanagesPendingController Tests', () => {
     const orphanagesRepository = dataSource.getRepository(Orphanage);
     await orphanagesRepository.insert([
       {
-        id: 1,
         name: 'Teste',
         latitude: -5.101444,
         longitude: -38.369682,
@@ -89,7 +88,6 @@ describe('FindAllOrphanagesPendingController Tests', () => {
         confirmed: true,
       },
       {
-        id: 2,
         name: 'Teste 2',
         latitude: -5.096411,
         longitude: -38.368701,
@@ -102,7 +100,6 @@ describe('FindAllOrphanagesPendingController Tests', () => {
         confirmed: true,
       },
       {
-        id: 3,
         name: 'Teste 3',
         latitude: -5.095159,
         longitude: -38.371198,
@@ -123,8 +120,7 @@ describe('FindAllOrphanagesPendingController Tests', () => {
 
     expect(orphanages_by_page.length).toBe(1);
     expect(quantity_pending).toBe(1);
-    expect(orphanages_by_page[0]).toEqual({
-      id: 3,
+    expect(orphanages_by_page[0]).toMatchObject({
       about: 'Teste 3',
       images: [],
       instructions: 'Teste',
@@ -194,8 +190,7 @@ describe('FindAllOrphanagesPendingController Tests', () => {
 
     expect(orphanages_by_page.length).toBe(1);
     expect(quantity_pending).toBe(2);
-    expect(orphanages_by_page[0]).toEqual({
-      id: 3,
+    expect(orphanages_by_page[0]).toMatchObject({
       about: 'Teste 3',
       images: [],
       instructions: 'Teste',

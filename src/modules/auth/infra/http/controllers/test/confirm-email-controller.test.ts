@@ -24,7 +24,7 @@ describe('ConfirmEmailController Tests', () => {
 
   afterEach(async () => {
     const usersRepository = dataSource.getRepository(User);
-    await usersRepository.clear();
+    await usersRepository.delete({});
   });
 
   it('should return status code 204 when the email is confirmed', async () => {

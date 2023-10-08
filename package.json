@@ -10,7 +10,7 @@
     "typeorm": "ts-node-dev ./node_modules/typeorm/cli.js",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint --fix --ext .ts .",
-    "test": "NODE_ENV=test && jest",
+    "test": "NODE_ENV=test && jest --runInBand",
     "prepare": "husky install"
   },
   "engines": {
@@ -47,7 +47,6 @@
     "@types/yup": "^0.29.8",
     "@typescript-eslint/eslint-plugin": "^6.4.1",
     "@typescript-eslint/parser": "^6.4.1",
-    "better-sqlite3": "^7.6.2",
     "eslint": "~8.17.0",
     "eslint-config": "^0.3.0",
     "eslint-plugin-prettier": "^5.0.0",

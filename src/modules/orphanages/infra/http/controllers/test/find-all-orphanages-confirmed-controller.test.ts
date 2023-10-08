@@ -62,13 +62,13 @@ describe('FindAllOrphanagesController Tests', () => {
       .mockImplementation(jest.fn());
     const imagesRepository = dataSource.getRepository(Image);
     const orphanagesRepository = dataSource.getRepository(Orphanage);
-    await imagesRepository.clear();
-    await orphanagesRepository.clear();
+    await imagesRepository.delete({});
+    await orphanagesRepository.delete({});
   });
 
   afterAll(async () => {
     const usersRepository = dataSource.getRepository(User);
-    await usersRepository.clear();
+    await usersRepository.delete({});
     await dataSource.destroy();
   });
 
@@ -76,7 +76,6 @@ describe('FindAllOrphanagesController Tests', () => {
     const orphanagesRepository = dataSource.getRepository(Orphanage);
     await orphanagesRepository.insert([
       {
-        id: 1,
         name: 'Teste',
         latitude: -5.101444,
         longitude: -38.369682,
@@ -89,7 +88,6 @@ describe('FindAllOrphanagesController Tests', () => {
         confirmed: true,
       },
       {
-        id: 2,
         name: 'Teste 2',
         latitude: -5.096411,
         longitude: -38.368701,
@@ -102,7 +100,6 @@ describe('FindAllOrphanagesController Tests', () => {
         confirmed: false,
       },
       {
-        id: 3,
         name: 'Teste 3',
         latitude: -5.095159,
         longitude: -38.371198,
@@ -123,9 +120,8 @@ describe('FindAllOrphanagesController Tests', () => {
 
     expect(orphanages_by_page.length).toBe(2);
     expect(quantity_confirmed).toBe(2);
-    expect(orphanages_by_page[0]).toEqual({
+    expect(orphanages_by_page[0]).toMatchObject({
       about: 'Teste',
-      id: 1,
       images: [],
       instructions: 'Teste',
       latitude: -5.101444,
@@ -143,7 +139,6 @@ describe('FindAllOrphanagesController Tests', () => {
     const orphanagesRepository = dataSource.getRepository(Orphanage);
     await orphanagesRepository.insert([
       {
-        id: 1,
         name: 'Teste',
         latitude: -5.101444,
         longitude: -38.369682,
@@ -156,7 +151,6 @@ describe('FindAllOrphanagesController Tests', () => {
         confirmed: true,
       },
       {
-        id: 2,
         name: 'Teste 2',
         latitude: -5.096411,
         longitude: -38.368701,
@@ -169,7 +163,6 @@ describe('FindAllOrphanagesController Tests', () => {
         confirmed: false,
       },
       {
-        id: 3,
         name: 'Teste 3',
         latitude: -5.095159,
         longitude: -38.371198,
@@ -194,9 +187,8 @@ describe('FindAllOrphanagesController Tests', () => {
 
     expect(orphanages_by_page.length).toBe(1);
     expect(quantity_confirmed).toBe(2);
-    expect(orphanages_by_page[0]).toEqual({
+    expect(orphanages_by_page[0]).toMatchObject({
       about: 'Teste 3',
-      id: 3,
       images: [],
       instructions: 'Teste',
       latitude: -5.095159,

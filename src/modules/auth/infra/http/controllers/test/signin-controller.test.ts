@@ -23,7 +23,7 @@ describe('SigninController Tests', () => {
 
   afterEach(async () => {
     const usersRepository = dataSource.getRepository(User);
-    await usersRepository.clear();
+    await usersRepository.delete({});
   });
 
   it('should return access token when login successfully', async () => {

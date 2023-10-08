@@ -26,13 +26,16 @@ export const dataSource =
         ],
       })
     : new DataSource({
-        type: 'better-sqlite3',
-        database: ':memory:',
+        type: 'postgres',
+        host: 'localhost',
+        port: 5455,
+        password: '1234',
+        username: 'postgres',
+        database: 'postgres',
         entities: [User, Orphanage, Image],
         migrations: [
           createTableOrphanages1602727619066,
           createTableImages1602780622021,
           createTableUsers1603584669272,
         ],
-        migrationsRun: true,
       });

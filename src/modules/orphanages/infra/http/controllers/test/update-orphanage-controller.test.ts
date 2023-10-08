@@ -78,21 +78,20 @@ describe('UpdateOrphanageController Tests', () => {
         }
       }
     }
-    await imagesRepository.clear();
-    await orphanagesRepository.clear();
+    await imagesRepository.delete({});
+    await orphanagesRepository.delete({});
   });
 
   afterAll(async () => {
     const usersRepository = dataSource.getRepository(User);
-    await usersRepository.clear();
+    await usersRepository.delete({});
     await dataSource.destroy();
   });
 
   it('should update orphanage by id', async () => {
     const orphanagesRepository = dataSource.getRepository(Orphanage);
-    await orphanagesRepository.insert([
+    const { identifiers } = await orphanagesRepository.insert([
       {
-        id: 1,
         name: 'Teste',
         latitude: -5.101444,
         longitude: -38.369682,
@@ -106,7 +105,7 @@ describe('UpdateOrphanageController Tests', () => {
       },
     ]);
     const response = await request(app)
-      .put('/orphanages/1')
+      .put(`/orphanages/${identifiers[0].id}`)
       .set('Content-Type', 'multipart/form-data')
       .field('name', 'Teste Novo')
       .field('latitude', '-5.093242')
@@ -153,9 +152,8 @@ describe('UpdateOrphanageController Tests', () => {
 
   it('should return an error when already exists an orphanage on the location', async () => {
     const orphanagesRepository = dataSource.getRepository(Orphanage);
-    await orphanagesRepository.insert([
+    const { identifiers } = await orphanagesRepository.insert([
       {
-        id: 1,
         name: 'Teste',
         latitude: -5.101444,
         longitude: -38.369682,
@@ -168,7 +166,6 @@ describe('UpdateOrphanageController Tests', () => {
         confirmed: true,
       },
       {
-        id: 2,
         name: 'Teste 2',
         latitude: -5.096411,
         longitude: -38.368701,
@@ -182,7 +179,7 @@ describe('UpdateOrphanageController Tests', () => {
       },
     ]);
     const response = await request(app)
-      .put('/orphanages/1')
+      .put(`/orphanages/${identifiers[0].id}`)
       .set('Content-Type', 'multipart/form-data')
       .field('name', 'Teste Novo')
       .field('latitude', '-5.096411')

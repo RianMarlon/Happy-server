@@ -62,13 +62,13 @@ describe('FindAllOrphanagesConfirmedController Tests', () => {
       .mockImplementation(jest.fn());
     const imagesRepository = dataSource.getRepository(Image);
     const orphanagesRepository = dataSource.getRepository(Orphanage);
-    await imagesRepository.clear();
-    await orphanagesRepository.clear();
+    await imagesRepository.delete({});
+    await orphanagesRepository.delete({});
   });
 
   afterAll(async () => {
     const usersRepository = dataSource.getRepository(User);
-    await usersRepository.clear();
+    await usersRepository.delete({});
     await dataSource.destroy();
   });
 
@@ -117,9 +117,8 @@ describe('FindAllOrphanagesConfirmedController Tests', () => {
       .set({ Authorization: `Basic ${accessTokenUser}` });
 
     expect(response.body.length).toBe(3);
-    expect(response.body[0]).toEqual({
+    expect(response.body[0]).toMatchObject({
       about: 'Teste',
-      id: 1,
       images: [],
       instructions: 'Teste',
       latitude: -5.101444,

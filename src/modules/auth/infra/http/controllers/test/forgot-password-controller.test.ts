@@ -23,7 +23,7 @@ describe('ForgotPasswordController Tests', () => {
 
   afterEach(async () => {
     const usersRepository = dataSource.getRepository(User);
-    await usersRepository.clear();
+    await usersRepository.delete({});
   });
 
   it('should return status code 200', async () => {

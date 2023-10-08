@@ -19,7 +19,7 @@ describe('CreateUserController Tests', () => {
 
   afterEach(async () => {
     const usersRepository = dataSource.getRepository(User);
-    await usersRepository.clear();
+    await usersRepository.delete({});
   });
 
   afterAll(async () => {

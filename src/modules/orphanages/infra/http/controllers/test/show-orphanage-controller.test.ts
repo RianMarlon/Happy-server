@@ -62,19 +62,19 @@ describe('ShowOrphanageController Tests', () => {
       .mockImplementation(jest.fn());
     const imagesRepository = dataSource.getRepository(Image);
     const orphanagesRepository = dataSource.getRepository(Orphanage);
-    await imagesRepository.clear();
-    await orphanagesRepository.clear();
+    await imagesRepository.delete({});
+    await orphanagesRepository.delete({});
   });
 
   afterAll(async () => {
     const usersRepository = dataSource.getRepository(User);
-    await usersRepository.clear();
+    await usersRepository.delete({});
     await dataSource.destroy();
   });
 
   it('should return orphanage by id', async () => {
     const orphanagesRepository = dataSource.getRepository(Orphanage);
-    await orphanagesRepository.insert([
+    const { identifiers } = await orphanagesRepository.insert([
       {
         id: 1,
         name: 'Teste',
@@ -116,12 +116,11 @@ describe('ShowOrphanageController Tests', () => {
       },
     ]);
     const response = await request(app)
-      .get('/orphanages/3')
+      .get(`/orphanages/${identifiers[2].id}`)
       .set({ Authorization: `Basic ${accessTokenUser}` });
 
-    expect(response.body).toEqual({
+    expect(response.body).toMatchObject({
       about: 'Teste 3',
-      id: 3,
       images: [],
       instructions: 'Teste',
       latitude: -5.095159,

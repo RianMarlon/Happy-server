@@ -12,37 +12,40 @@ services:
       - postgres
       - postgres_tmpfs
     command: bash -c "yarn build && yarn typeorm --dataSource ./dist/shared/infra/typeorm/index.js migration:run && yarn start"
-    network_mode: host
-    extra_hosts:
-      - 'host.docker.internal:host-gateway'
+    networks:
+      - happy_network
   
   postgres:
     image: postgres:14-alpine
     container_name: happy_database
     ports:
-      - 5342:5342
+      - 5432:5432
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/prod
     environment:
       - POSTGRES_PASSWORD=1234
-    network_mode: host
-    extra_hosts:
-      - 'host.docker.internal:host-gateway'
+    networks:
+      - happy_network
   
   postgres_tmpfs:
     image: postgres:14-alpine
     container_name: happy_database_tmpfs
     ports:
-      - 5455:5455
+      - 5455:5432
     environment:
       - POSTGRES_PASSWORD=1234
-      - PGPORT=5455
     tmpfs:
       - /var/lib/postgresql/data
-    network_mode: host
-    extra_hosts:
-      - 'host.docker.internal:host-gateway'
+    volumes:
+      - postgres_tmpfs_data:/var/lib/postgresql/prod
+    networks:
+      - happy_network
+
+networks:
+  happy_network:
+    driver: bridge
 
 volumes:
   postgres_data:
-    driver: local
+  postgres_tmpfs_data:
+  

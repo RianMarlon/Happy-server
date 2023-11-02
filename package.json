@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node dist/shared/infra/http/server.js",
     "dev": "tsnd --transpile-only --ignore-watch node_modules src/shared/infra/http/server.ts",
+    "prebuild": "rimraf /dist",
     "build": "tsc",
     "typeorm": "ts-node-dev ./node_modules/typeorm/cli.js",
     "lint": "eslint . --ext .ts",

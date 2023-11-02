@@ -30,6 +30,9 @@ class OrphanagesRepository implements IOrphanagesRepository {
         where: {
           confirmed,
         },
+        order: {
+          id: 'ASC',
+        },
       });
     }
 
@@ -37,6 +40,9 @@ class OrphanagesRepository implements IOrphanagesRepository {
       relations: ['images'],
       where: {
         confirmed,
+      },
+      order: {
+        id: 'ASC',
       },
     });
   }

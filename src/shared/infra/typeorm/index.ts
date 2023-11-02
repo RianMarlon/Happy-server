@@ -38,4 +38,5 @@ export const dataSource =
           createTableImages1602780622021,
           createTableUsers1603584669272,
         ],
+        migrationsRun: true,
       });

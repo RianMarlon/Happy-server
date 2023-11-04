@@ -24,7 +24,7 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - postgres_data:/var/lib/postgresql/prod
+      - postgres_data:/var/lib/postgresql/data
     environment:
       - POSTGRES_PASSWORD=1234
     networks:
@@ -39,8 +39,6 @@ services:
       - POSTGRES_PASSWORD=1234
     tmpfs:
       - /var/lib/postgresql/data
-    volumes:
-      - postgres_tmpfs_data:/var/lib/postgresql/prod
     networks:
       - happy_network
 
@@ -50,5 +48,3 @@ networks:
 
 volumes:
   postgres_data:
-  postgres_tmpfs_data:
-  
